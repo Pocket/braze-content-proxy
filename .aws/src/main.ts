@@ -8,19 +8,16 @@ import {
 import { AwsProvider, kms, datasources, sns } from '@cdktf/provider-aws';
 import { config } from './config';
 import {
-  ApplicationRedis,
   PocketALBApplication,
   PocketECSCodePipeline,
   PocketPagerDuty,
-  PocketVPC,
 } from '@pocket-tools/terraform-modules';
 import { PagerdutyProvider } from '@cdktf/provider-pagerduty';
 import { LocalProvider } from '@cdktf/provider-local';
 import { NullProvider } from '@cdktf/provider-null';
 import * as fs from 'fs';
 
-//todo: change class name to your service name
-class Acme extends TerraformStack {
+class BrazeContentProxy extends TerraformStack {
   constructor(scope: Construct, name: string) {
     super(scope, name);
 
@@ -37,7 +34,6 @@ class Acme extends TerraformStack {
 
     const region = new datasources.DataAwsRegion(this, 'region');
     const caller = new datasources.DataAwsCallerIdentity(this, 'caller');
-    const cache = Acme.createElasticache(this);
 
     const pocketApp = this.createPocketAlbApplication({
       pagerDuty: this.createPagerDuty(),
@@ -45,46 +41,9 @@ class Acme extends TerraformStack {
       snsTopic: this.getCodeDeploySnsTopic(),
       region,
       caller,
-      cache,
     });
 
     this.createApplicationCodePipeline(pocketApp);
-  }
-
-  /**
-   * Creates the elasticache and returns the node address list
-   * @param scope
-   * @private
-   */
-  private static createElasticache(scope: Construct): {
-    primaryEndpoint: string;
-    readerEndpoint: string;
-  } {
-    const pocketVPC = new PocketVPC(scope, 'pocket-vpc');
-
-    const elasticache = new ApplicationRedis(scope, 'redis', {
-      //Usually we would set the security group ids of the service that needs to hit this.
-      //However we don't have the necessary security group because it gets created in PocketALBApplication
-      //So instead we set it to null and allow anything within the vpc to access it.
-      //This is not ideal..
-      //Ideally we need to be able to add security groups to the ALB application.
-      allowedIngressSecurityGroupIds: undefined,
-      node: {
-        count: config.cacheNodes,
-        size: config.cacheSize,
-      },
-      subnetIds: pocketVPC.privateSubnetIds,
-      tags: config.tags,
-      vpcId: pocketVPC.vpc.id,
-      prefix: config.prefix,
-    });
-
-    return {
-      primaryEndpoint:
-        elasticache.elasticacheReplicationGroup.primaryEndpointAddress,
-      readerEndpoint:
-        elasticache.elasticacheReplicationGroup.readerEndpointAddress,
-    };
   }
 
   /**
@@ -147,12 +106,12 @@ class Acme extends TerraformStack {
     return new PocketPagerDuty(this, 'pagerduty', {
       prefix: config.prefix,
       service: {
-        criticalEscalationPolicyId: incidentManagement.get(
-          'policy_backend_critical_id'
-        ),
-        nonCriticalEscalationPolicyId: incidentManagement.get(
-          'policy_backend_non_critical_id'
-        ),
+        criticalEscalationPolicyId: incidentManagement
+          .get('policy_backend_product_critical_id')
+          .toString(),
+        nonCriticalEscalationPolicyId: incidentManagement
+          .get('policy_backend_product_non_critical_id')
+          .toString(),
       },
     });
   }
@@ -163,7 +122,6 @@ class Acme extends TerraformStack {
     caller: datasources.DataAwsCallerIdentity;
     secretsManagerKmsAlias: kms.DataAwsKmsAlias;
     snsTopic: sns.DataAwsSnsTopic;
-    cache: { primaryEndpoint: string; readerEndpoint: string };
   }): PocketALBApplication {
     const {
       //  pagerDuty, // enable if necessary
@@ -171,23 +129,22 @@ class Acme extends TerraformStack {
       caller,
       secretsManagerKmsAlias,
       snsTopic,
-      cache,
     } = dependencies;
 
     return new PocketALBApplication(this, 'application', {
-      internal: true,
+      internal: false,
       prefix: config.prefix,
       alb6CharacterPrefix: config.shortName,
       tags: config.tags,
-      cdn: false,
+      cdn: true,
       domain: config.domain,
       containerConfigs: [
         {
           name: 'app',
           portMappings: [
             {
-              hostPort: 4005,
-              containerPort: 4005,
+              hostPort: 4500,
+              containerPort: 4500,
             },
           ],
           healthCheck: config.healthCheck,
@@ -199,14 +156,6 @@ class Acme extends TerraformStack {
             {
               name: 'ENVIRONMENT',
               value: process.env.NODE_ENV, // this gives us a nice lowercase production and development
-            },
-            {
-              name: 'REDIS_PRIMARY_ENDPOINT',
-              value: cache.primaryEndpoint,
-            },
-            {
-              name: 'REDIS_READER_ENDPOINT',
-              value: cache.readerEndpoint,
             },
           ],
           secretEnvVars: [
@@ -233,11 +182,16 @@ class Acme extends TerraformStack {
         useCodeDeploy: true,
         useCodePipeline: true,
         snsNotificationTopicArn: snsTopic.arn,
+        notifications: {
+          notifyOnFailed: true,
+          notifyOnSucceeded: false,
+          notifyOnStarted: false,
+        },
       },
       exposedContainer: {
         name: 'app',
-        port: 4001,
-        healthCheckPath: '/.well-known/apollo/server-health',
+        port: 4500,
+        healthCheckPath: '/.well-known/server-health',
       },
       ecsIamConfig: {
         prefix: config.prefix,
@@ -300,7 +254,7 @@ class Acme extends TerraformStack {
 }
 
 const app = new App();
-const stack = new Acme(app, 'acme');
+const stack = new BrazeContentProxy(app, 'braze-content-proxy');
 const tfEnvVersion = fs.readFileSync('.terraform-version', 'utf8');
 stack.addOverride('terraform.required_version', tfEnvVersion);
 app.synth();
