@@ -4,6 +4,7 @@ import * as Sentry from '@sentry/node';
 import https from 'https';
 import express from 'express';
 import config from './config';
+import { getStories } from './client-api-proxy';
 
 // TODO: copy .aws directory from client-api
 
@@ -29,8 +30,8 @@ Sentry.init({
 
 const app = express();
 
-//If there is no host header (really there always should be..) then use collection-api as the name
-app.use(xrayExpress.openSegment('firefox-android-home-recommendations'));
+//If there is no host header (really there always should be..) then use braze-content-proxy as the name
+app.use(xrayExpress.openSegment('braze-content-proxy'));
 
 //Set XRay to use the host header to open its segment name.
 AWSXRay.middleware.enableDynamicNaming('*');
@@ -41,16 +42,13 @@ app.get('/.well-known/server-health', (req, res) => {
   res.status(200).send('ok');
 });
 
-// TODO: return appropriate cache headers here
-// let's start with 30 minutes
-// need to research exact header names
-app.get('/', async (req, res) => {
+app.get('/:scheduledSurfaceID/:date', async (req, res) => {
   // enable 30 minute cache when in AWS
   if (config.app.environment !== 'development') {
     res.set('Cache-control', 'public, max-age=1800');
   }
 
-  res.json({ Hello: 'World' });
+  res.json(await getStories(req.params.date, req.params.scheduledSurfaceID));
 });
 
 //Make sure the express app has the xray close segment handler
