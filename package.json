@@ -19,6 +19,7 @@
     "url": "git+https://github.com/Pocket/braze-content-proxy.git"
   },
   "dependencies": {
+    "@apollo/client": "^3.6.0",
     "@apollo/federation": "^0.35.1",
     "@pocket-tools/apollo-utils": "^2.2.0",
     "@sentry/node": "^6.17.5",
@@ -29,15 +30,16 @@
     "apollo-server-express": "^3.4.1",
     "apollo-server-plugin-response-cache": "^3.3.0",
     "aws-xray-sdk-express": "^3.3.4",
-    "dataloader": "^2.0.0",
-    "graphql": "^16.3.0",
-    "graphql-tag": "^2.12.6",
     "cross-fetch": "3.1.5",
-    "express": "4.17.3"
+    "dataloader": "^2.0.0",
+    "express": "4.17.3",
+    "graphql": "^16.4.0",
+    "graphql-tag": "^2.12.6"
   },
   "devDependencies": {
     "@types/chai": "4.3.1",
     "@types/jest": "27.4.1",
+    "@types/react": "^18.0.8",
     "@typescript-eslint/eslint-plugin": "5.11.0",
     "@typescript-eslint/parser": "5.11.0",
     "chai": "4.3.6",
