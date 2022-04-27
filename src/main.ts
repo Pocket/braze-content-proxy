@@ -54,6 +54,8 @@ app.get('/scheduled-items/:scheduledSurfaceID?date=:date', async (req, res) => {
     res.set('Cache-control', 'public, max-age=1800');
   }
 
+  //TODO: implement caching here?
+
   const { date, scheduledSurfaceID } =
     req.query as unknown as BrazePocketHitsQuery;
 

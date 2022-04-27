@@ -20,6 +20,10 @@ export async function getStories(
   date: string,
   scheduledSurfaceID: string
 ): Promise<BrazeContentProxyResponse> {
+  console.log('********************************************************');
+  console.log('CACHE NOT HIT');
+  console.log('********************************************************');
+
   let data: ClientApiResponse | null = null;
 
   try {
