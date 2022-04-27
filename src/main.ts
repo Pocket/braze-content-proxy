@@ -42,13 +42,22 @@ app.get('/.well-known/server-health', (req, res) => {
   res.status(200).send('ok');
 });
 
-app.get('/:scheduledSurfaceID/:date', async (req, res) => {
+// The parameters we expect end users to provide
+interface BrazePocketHitsQuery {
+  scheduledSurfaceID: string;
+  date: string;
+}
+
+app.get('/scheduled-items/:scheduledSurfaceID?date=:date', async (req, res) => {
   // enable 30 minute cache when in AWS
   if (config.app.environment !== 'development') {
     res.set('Cache-control', 'public, max-age=1800');
   }
 
-  res.json(await getStories(req.params.date, req.params.scheduledSurfaceID));
+  const { date, scheduledSurfaceID } =
+    req.query as unknown as BrazePocketHitsQuery;
+
+  res.json(await getStories(date, scheduledSurfaceID));
 });
 
 //Make sure the express app has the xray close segment handler
