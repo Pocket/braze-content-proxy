@@ -48,7 +48,7 @@ interface BrazePocketHitsQuery {
   date: string;
 }
 
-app.get('/scheduled-items/:scheduledSurfaceID?date=:date', async (req, res) => {
+app.get('/scheduled-items/:scheduledSurfaceID', async (req, res) => {
   // enable 30 minute cache when in AWS
   if (config.app.environment !== 'development') {
     res.set('Cache-control', 'public, max-age=1800');
