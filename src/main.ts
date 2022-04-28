@@ -2,7 +2,7 @@ import AWSXRay from 'aws-xray-sdk-core';
 import xrayExpress from 'aws-xray-sdk-express';
 import * as Sentry from '@sentry/node';
 import https from 'https';
-import express from 'express';
+import express, { Request } from 'express';
 import config from './config';
 import { getStories } from './client-api-proxy';
 
@@ -43,24 +43,42 @@ app.get('/.well-known/server-health', (req, res) => {
 });
 
 // The parameters we expect end users to provide
-interface BrazePocketHitsQuery {
-  scheduledSurfaceID: string;
+interface BrazePocketHitsQueryParams {
   date: string;
 }
 
-app.get('/scheduled-items/:scheduledSurfaceID?date=:date', async (req, res) => {
-  // enable 30 minute cache when in AWS
-  if (config.app.environment !== 'development') {
-    res.set('Cache-control', 'public, max-age=1800');
+enum BrazePocketHitsParams {
+  scheduledSurfaceID = 'scheduledSurfaceID',
+}
+
+type BrazePocketHitsRequest = Request<
+  Record<BrazePocketHitsParams, 'string'>,
+  any,
+  any,
+  BrazePocketHitsQueryParams
+>;
+
+const basePath = '/scheduled-items/';
+
+app.get(
+  `${basePath}:${BrazePocketHitsParams.scheduledSurfaceID}`,
+  async (req: BrazePocketHitsRequest, res) => {
+    // enable 30 minute cache when in AWS
+    if (config.app.environment !== 'development') {
+      res.set('Cache-control', 'public, max-age=120');
+    }
+
+    //TODO: implement caching here?
+
+    const date = req.query.date;
+
+    console.log(req.params.scheduledSurfaceID, date);
+
+    //res.send({ date: date, bob: scheduledSurfaceID });
+
+    // res.json(await getStories(date, scheduledSurfaceID));
   }
-
-  //TODO: implement caching here?
-
-  const { date, scheduledSurfaceID } =
-    req.query as unknown as BrazePocketHitsQuery;
-
-  res.json(await getStories(date, scheduledSurfaceID));
-});
+);
 
 //Make sure the express app has the xray close segment handler
 app.use(xrayExpress.closeSegment());
