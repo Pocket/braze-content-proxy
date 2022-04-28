@@ -42,15 +42,17 @@ app.get('/.well-known/server-health', (req, res) => {
   res.status(200).send('ok');
 });
 
-// The parameters we expect end users to provide
-interface BrazePocketHitsQueryParams {
-  date: string;
-}
-
+// The url params
 enum BrazePocketHitsParams {
   scheduledSurfaceID = 'scheduledSurfaceID',
 }
 
+// The query parameters we expect end users to provide
+interface BrazePocketHitsQueryParams {
+  date: string;
+}
+
+// A custom request type to help with code completion
 type BrazePocketHitsRequest = Request<
   Record<BrazePocketHitsParams, 'string'>,
   any,
@@ -58,28 +60,29 @@ type BrazePocketHitsRequest = Request<
   BrazePocketHitsQueryParams
 >;
 
+// base path after our domain uri
 const basePath = '/scheduled-items/';
 
+/**
+ * Controller function for the path: /scheduled-items/:scheduledSurfaceID'
+ */
 app.get(
   `${basePath}:${BrazePocketHitsParams.scheduledSurfaceID}`,
   async (req: BrazePocketHitsRequest, res) => {
-    // // enable 30 minute cache when in AWS
-    // if (config.app.environment !== 'development') {
-    //   res.set('Cache-control', 'public, max-age=120');
-    // }
+    // This express app response Cache-control header is honoured by our CDN
+    // The cache max-age time limit used here is what the AWS CDN will use
+    if (config.app.environment !== 'development') {
+      res.set('Cache-control', 'public, max-age=1800');
+    }
 
-    //TODO: implement caching here?
+    //TODO: cache invalidation logic goes here? Confirm with stakeholders
 
-    res.set('Cache-control', 'public, max-age=120');
-
+    // get our url param
+    const scheduledSurfaceID = req.params.scheduledSurfaceID;
+    // get our url query param
     const date = req.query.date;
-    const scheduledSurfaceId = req.params.scheduledSurfaceID;
 
-    // console.log(req.params.scheduledSurfaceID, date);
-
-    res.send({ scheduledSurfaceId, date });
-
-    // res.json(await getStories(date, scheduledSurfaceID));
+    res.json(await getStories(date, scheduledSurfaceID));
   }
 );
 
