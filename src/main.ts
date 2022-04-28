@@ -71,10 +71,11 @@ app.get(
     //TODO: implement caching here?
 
     const date = req.query.date;
+    const scheduledSurfaceId = req.params.scheduledSurfaceID;
 
-    console.log(req.params.scheduledSurfaceID, date);
+    // console.log(req.params.scheduledSurfaceID, date);
 
-    //res.send({ date: date, bob: scheduledSurfaceID });
+    res.send({ scheduledSurfaceId, date });
 
     // res.json(await getStories(date, scheduledSurfaceID));
   }
