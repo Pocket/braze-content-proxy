@@ -63,12 +63,14 @@ const basePath = '/scheduled-items/';
 app.get(
   `${basePath}:${BrazePocketHitsParams.scheduledSurfaceID}`,
   async (req: BrazePocketHitsRequest, res) => {
-    // enable 30 minute cache when in AWS
-    if (config.app.environment !== 'development') {
-      res.set('Cache-control', 'public, max-age=120');
-    }
+    // // enable 30 minute cache when in AWS
+    // if (config.app.environment !== 'development') {
+    //   res.set('Cache-control', 'public, max-age=120');
+    // }
 
     //TODO: implement caching here?
+
+    res.set('Cache-control', 'public, max-age=120');
 
     const date = req.query.date;
     const scheduledSurfaceId = req.params.scheduledSurfaceID;
