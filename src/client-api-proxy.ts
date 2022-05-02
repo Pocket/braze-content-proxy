@@ -1,4 +1,3 @@
-import * as Sentry from '@sentry/node';
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import gql from 'graphql-tag';
 import fetch from 'cross-fetch';
@@ -21,31 +20,15 @@ export async function getStories(
   date: string,
   scheduledSurfaceID: string
 ): Promise<BrazeContentProxyResponse> {
-  let data: ClientApiResponse | null = null;
-
   // Validate inputs
-  try {
-    await validateScheduledSurfaceGuid(scheduledSurfaceID);
-  } catch (err) {
-    console.log(err);
-    Sentry.captureException(err);
-  }
-
-  try {
-    await validateDate(date);
-  } catch (err) {
-    console.log(err);
-    Sentry.captureException(err);
-  }
+  validateScheduledSurfaceGuid(scheduledSurfaceID);
+  validateDate(date);
 
   // Retrieve data
-  try {
-    data = await getData(date, scheduledSurfaceID);
-  } catch (err) {
-    console.log('Error retrieving Pocket Hits data!');
-    console.log(err);
-    Sentry.captureException(err);
-  }
+  const data: ClientApiResponse | null = await getData(
+    date,
+    scheduledSurfaceID
+  );
 
   return {
     stories: data ? data.data.scheduledSurface.items : [],
@@ -84,13 +67,9 @@ async function getData(
   });
 
   if (!data.data?.scheduledSurface?.items) {
-    Sentry.captureException(
-      new Error(
-        `No data returned for ${scheduledSurfaceID} scheduled on ${date}.`
-      )
+    throw new Error(
+      `No data returned for ${scheduledSurfaceID} scheduled on ${date}.`
     );
-
-    return null;
   }
 
   return data;

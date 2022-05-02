@@ -38,26 +38,44 @@ AWSXRay.middleware.enableDynamicNaming('*');
 
 app.use(express.json());
 
+/**
+ * Use a custom error handler.
+ *
+ * Note: this middleware call needs to be placed last,
+ * that is, below all other `app.use()` calls.
+ *
+ */
+app.use((err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+  // Need a 500 error for Braze to not send out an email
+  res.status(500);
+  res.render('error', { error: err });
+});
+
 app.get('/.well-known/server-health', (req, res) => {
   res.status(200).send('ok');
 });
 
-// The parameters we expect end users to provide
-interface BrazePocketHitsQuery {
-  scheduledSurfaceID: string;
-  date: string;
-}
-
-app.get('/scheduled-items/:scheduledSurfaceID', async (req, res) => {
+app.get('/scheduled-items/:scheduledSurfaceID', async (req, res, next) => {
   // enable 30 minute cache when in AWS
   if (config.app.environment !== 'development') {
     res.set('Cache-control', 'public, max-age=1800');
   }
 
-  const { date, scheduledSurfaceID } =
-    req.query as unknown as BrazePocketHitsQuery;
+  // Get the scheduled surface GUID
+  const scheduledSurfaceID = req.params.scheduledSurfaceID;
+  // Get the date the stories are scheduled for
+  const date = req.query.date as string;
 
-  res.json(await getStories(date, scheduledSurfaceID));
+  // Fetch the data
+  try {
+    res.json(await getStories(date, scheduledSurfaceID));
+  } catch (err) {
+    // Let Express handle any errors
+    next(err);
+  }
 });
 
 //Make sure the express app has the xray close segment handler
