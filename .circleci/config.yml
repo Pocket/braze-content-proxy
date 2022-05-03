@@ -89,9 +89,9 @@ jobs:
           paths:
             - app_prod
 
-   test_functional:
+  test_functional:
      # Example for running functional tests using a docker container
-     description: Run functional tests against external services, e.g. MySQL
+     description: Run functional tests to validate status and return type from endpoint
      docker:
        # The application
        - image: circleci/node:16
