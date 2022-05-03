@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { app } from './main';
-import request = require('supertest');
+import request from 'supertest';
 
 describe('functional tests', () => {
   describe('health endpoint', () => {
