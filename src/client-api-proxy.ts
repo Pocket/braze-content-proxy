@@ -3,7 +3,6 @@ import gql from 'graphql-tag';
 import fetch from 'cross-fetch';
 import config from './config';
 import { BrazeContentProxyResponse, ClientApiResponse } from './types';
-import { validateDate, validateScheduledSurfaceGuid } from './utils';
 
 const client = new ApolloClient({
   link: new HttpLink({ fetch, uri: 'https://client-api.getpocket.com' }),
@@ -20,10 +19,6 @@ export async function getStories(
   date: string,
   scheduledSurfaceID: string
 ): Promise<BrazeContentProxyResponse> {
-  // Validate inputs
-  validateScheduledSurfaceGuid(scheduledSurfaceID);
-  validateDate(date);
-
   // Retrieve data
   const data: ClientApiResponse | null = await getData(
     date,

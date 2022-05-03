@@ -5,6 +5,7 @@ import https from 'https';
 import express from 'express';
 import config from './config';
 import { getStories } from './client-api-proxy';
+import { validateDate, validateScheduledSurfaceGuid } from './utils';
 
 // TODO: copy .aws directory from client-api
 
@@ -86,9 +87,13 @@ app.get('/scheduled-items/:scheduledSurfaceID', async (req, res, next) => {
   // Get the date the stories are scheduled for
   const date = req.query.date as string;
 
-  // Fetch the data
   try {
-    res.json(await getStories(date, scheduledSurfaceID));
+    // Validate inputs
+    validateScheduledSurfaceGuid(scheduledSurfaceID);
+    validateDate(date);
+
+    // Fetch data
+    return res.json(await getStories(date, scheduledSurfaceID));
   } catch (err) {
     // Let Express handle any errors
     next(err);
