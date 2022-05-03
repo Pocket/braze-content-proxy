@@ -38,26 +38,61 @@ AWSXRay.middleware.enableDynamicNaming('*');
 
 app.use(express.json());
 
+/**
+ * Use a custom error handler.
+ *
+ * Note: this middleware call needs to be placed last,
+ * that is, below all other `app.use()` calls.
+ *
+ */
+app.use((err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  // Log error to CloudWatch
+  console.log(err);
+
+  // Send error to Sentry
+  Sentry.captureException(err);
+
+  /**
+   * If Pocket Hits stories are unavailable for whatever reason, the emails
+   * should not be sent out. To achieve this, Braze needs to receive a 500 or 502
+   * error if anything is amiss - if a 404 error is sent instead, Braze will
+   * render an empty string and proceed with sending out the email.
+   *
+   * See Braze docs on Connected Content:
+   * https://www.braze.com/docs/user_guide/personalization_and_dynamic_content/connected_content/making_an_api_call/
+   */
+  res.status(500);
+  res.render('error', { error: err });
+});
+
 app.get('/.well-known/server-health', (req, res) => {
   res.status(200).send('ok');
 });
 
-// The parameters we expect end users to provide
-interface BrazePocketHitsQuery {
-  scheduledSurfaceID: string;
-  date: string;
-}
-
-app.get('/scheduled-items/:scheduledSurfaceID?date=:date', async (req, res) => {
+// This is the one and only endpoint planned for this repository,
+// so a separate controller is not necessary.
+app.get('/scheduled-items/:scheduledSurfaceID', async (req, res, next) => {
   // enable 30 minute cache when in AWS
   if (config.app.environment !== 'development') {
     res.set('Cache-control', 'public, max-age=1800');
   }
 
-  const { date, scheduledSurfaceID } =
-    req.query as unknown as BrazePocketHitsQuery;
+  // Get the scheduled surface GUID
+  const scheduledSurfaceID = req.params.scheduledSurfaceID;
+  // Get the date the stories are scheduled for
+  const date = req.query.date as string;
 
-  res.json(await getStories(date, scheduledSurfaceID));
+  // Fetch the data
+  try {
+    res.json(await getStories(date, scheduledSurfaceID));
+  } catch (err) {
+    // Let Express handle any errors
+    next(err);
+  }
 });
 
 //Make sure the express app has the xray close segment handler
