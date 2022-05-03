@@ -2,7 +2,7 @@ import AWSXRay from 'aws-xray-sdk-core';
 import xrayExpress from 'aws-xray-sdk-express';
 import * as Sentry from '@sentry/node';
 import https from 'https';
-import express from 'express';
+import express, { Express } from 'express';
 import config from './config';
 import { getStories } from './client-api-proxy';
 import { validateDate, validateScheduledSurfaceGuid } from './utils';
@@ -29,7 +29,7 @@ Sentry.init({
   debug: config.sentry.environment == 'development',
 });
 
-const app = express();
+export const app: Express = express();
 
 //If there is no host header (really there always should be..) then use braze-content-proxy as the name
 app.use(xrayExpress.openSegment('braze-content-proxy'));
@@ -103,8 +103,13 @@ app.get('/scheduled-items/:scheduledSurfaceID', async (req, res, next) => {
 //Make sure the express app has the xray close segment handler
 app.use(xrayExpress.closeSegment());
 
-app.listen({ port: config.app.port }, () => {
-  console.log(
-    `🚀 Braze Content Proxy ready at http://localhost:${config.app.port}`
-  );
-});
+app
+  .listen({ port: config.app.port }, () => {
+    console.log(
+      `🚀 Braze Content Proxy ready at http://localhost:${config.app.port}`
+    );
+  })
+  .on('error', (_error) => {
+    Sentry.captureException(_error.message);
+    return console.log('Error: ', _error.message);
+  });
