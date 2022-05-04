@@ -5,6 +5,10 @@ export default {
     version: `${process.env.GIT_SHA ?? 'local'}`,
     port: 4500,
   },
+  aws: {
+    region: process.env.REGION || 'us-east-1',
+    apiKey: process.env.API_KEY || 'BrazeContentProxy/Dev/ApiKey',
+  },
   sentry: {
     dsn: process.env.SENTRY_DSN || '',
     release: process.env.GIT_SHA || '',

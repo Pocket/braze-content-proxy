@@ -1,3 +1,5 @@
+import { getApiKey } from './secretsManager';
+
 /**
  * Check if the scheduled surface GUID provided is on the list
  * of surfaces needed by Braze.
@@ -26,6 +28,34 @@ export function validateDate(date: string): void {
     throw new Error(
       'Not a valid date. Please provide a date in YYYY-MM-DD format.'
     );
+  }
+
+  return;
+}
+
+/**
+ * Check if the API request is authorised. We store an API key in AWS Secrets Manager
+ * and provide it in Braze email templates so that API calls from Braze succeed.
+ *
+ * A rather simplistic way to ensure Pocket Hits data is not publicly available
+ * before it is sent out, but it is enough for our use case here.
+ *
+ * @param key
+ */
+export async function validateApiKey(key: string): Promise<void> {
+  const ERROR_MESSAGE = 'Please provide a valid API key';
+
+  // Fail early on no key provided.
+  if (!key) {
+    throw new Error(ERROR_MESSAGE);
+  }
+
+  // Retrieve the canonical API key from AWS Secret Manager.
+  const storedKey = await getApiKey();
+
+  // Compare the stored key to the one provided by the request to the API.
+  if (key !== storedKey) {
+    throw new Error(ERROR_MESSAGE);
   }
 
   return;
