@@ -17,12 +17,12 @@ const client = new ApolloClient({
  */
 export async function getStories(
   date: string,
-  scheduledSurfaceID: string
+  scheduledSurfaceId: string
 ): Promise<BrazeContentProxyResponse> {
   // Retrieve data
   const data: ClientApiResponse | null = await getData(
     date,
-    scheduledSurfaceID
+    scheduledSurfaceId
   );
 
   return {
@@ -36,7 +36,7 @@ export async function getStories(
  */
 async function getData(
   date: string,
-  scheduledSurfaceID: string
+  scheduledSurfaceId: string
 ): Promise<ClientApiResponse | null> {
   const data = await client.query({
     query: gql`
@@ -57,13 +57,13 @@ async function getData(
     `,
     variables: {
       date,
-      scheduledSurfaceID,
+      scheduledSurfaceId,
     },
   });
 
   if (!data.data?.scheduledSurface?.items) {
     throw new Error(
-      `No data returned for ${scheduledSurfaceID} scheduled on ${date}.`
+      `No data returned for ${scheduledSurfaceId} scheduled on ${date}.`
     );
   }
 
