@@ -25,8 +25,21 @@ export async function getStories(
     scheduledSurfaceId
   );
 
+  const stories = data ? data.data.scheduledSurface.items : [];
+
+  // Resize images on the fly so that
+  // they don't distort emails
+  // when sent out.
+  // (Was that a haiku?)
+  stories.forEach(function (part, index) {
+    this[index].imageUrl =
+      `${config.images.protocol}://${config.images.host}/${config.images.width}x${config.images.height}/filters:${config.images.filters}/`.concat(
+        encodeURIComponent(this[index].imageUrl)
+      );
+  }, stories);
+
   return {
-    stories: data ? data.data.scheduledSurface.items : [],
+    stories,
   };
 }
 
