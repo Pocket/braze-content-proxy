@@ -25,8 +25,21 @@ export async function getStories(
     scheduledSurfaceId
   );
 
+  const stories = data ? data.data.scheduledSurface.items : [];
+
+  // Resize images on the fly so that
+  // they don't distort emails
+  // when sent out.
+  // (Was that a haiku?)
+  stories.forEach(function (part, index) {
+    this[index].imageUrl =
+      `https://pocket-image-cache.com/150x150/filters:format(jpeg):quality(100):no_upscale():strip_exif()/`.concat(
+        encodeURIComponent(this[index].imageUrl)
+      );
+  }, stories);
+
   return {
-    stories: data ? data.data.scheduledSurface.items : [],
+    stories,
   };
 }
 
