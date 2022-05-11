@@ -33,7 +33,7 @@ export async function getStories(
   // (Was that a haiku?)
   stories.forEach(function (part, index) {
     this[index].imageUrl =
-      `https://pocket-image-cache.com/150x150/filters:format(jpeg):quality(100):no_upscale():strip_exif()/`.concat(
+      `${config.images.protocol}://${config.images.host}/${config.images.width}x${config.images.height}/filters:${config.images.filters}/`.concat(
         encodeURIComponent(this[index].imageUrl)
       );
   }, stories);
