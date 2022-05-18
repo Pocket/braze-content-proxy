@@ -9,6 +9,14 @@ export default {
     region: process.env.REGION || 'us-east-1',
     apiKey: process.env.API_KEY || 'BrazeContentProxy/Dev/ApiKey',
   },
+  // Params we call Pocket Image Cache with to resize story thumbnails on the fly.
+  images: {
+    protocol: 'https',
+    host: 'pocket-image-cache.com',
+    width: 150,
+    height: 150,
+    filters: 'format(jpeg):quality(100):no_upscale():strip_exif()',
+  },
   sentry: {
     dsn: process.env.SENTRY_DSN || '',
     release: process.env.GIT_SHA || '',
