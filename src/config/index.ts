@@ -7,7 +7,8 @@ export default {
   },
   aws: {
     region: process.env.REGION || 'us-east-1',
-    apiKey: process.env.API_KEY || 'BrazeContentProxy/Dev/ApiKey',
+    brazeApiKey:
+      process.env.BRAZE_API_KEY || 'BrazeContentProxy/Dev/BRAZE_API_KEY',
   },
   // Params we call Pocket Image Cache with to resize story thumbnails on the fly.
   images: {

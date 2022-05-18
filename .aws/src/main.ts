@@ -163,6 +163,10 @@ class BrazeContentProxy extends TerraformStack {
               name: 'SENTRY_DSN',
               valueFrom: `arn:aws:ssm:${region.name}:${caller.accountId}:parameter/${config.name}/${config.environment}/SENTRY_DSN`,
             },
+            {
+              name: 'BRAZE_API_KEY',
+              valueFrom: `arn:aws:secretsmanager:${region.name}:${caller.accountId}:secret:${config.name}/${config.environment}/BRAZE_API_KEY:key::`,
+            },
           ],
         },
         {

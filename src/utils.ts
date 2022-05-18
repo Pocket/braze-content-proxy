@@ -1,11 +1,11 @@
-import { getApiKey } from './secretsManager';
-
 /**
  * Check if the scheduled surface GUID provided is on the list
  * of surfaces needed by Braze.
  *
  * @param name
  */
+import config from './config';
+
 export function validateScheduledSurfaceGuid(name: string): void {
   const allowlist = ['POCKET_HITS_EN_US', 'POCKET_HITS_DE_DE'];
 
@@ -50,8 +50,7 @@ export async function validateApiKey(key: string): Promise<void> {
     throw new Error(ERROR_MESSAGE);
   }
 
-  // Retrieve the canonical API key from AWS Secret Manager.
-  const storedKey = await getApiKey();
+  const storedKey = config.aws.brazeApiKey;
 
   // Compare the stored key to the one provided by the request to the API.
   if (key !== storedKey) {
