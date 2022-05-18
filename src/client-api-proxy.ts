@@ -2,7 +2,11 @@ import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import gql from 'graphql-tag';
 import fetch from 'cross-fetch';
 import config from './config';
-import { BrazeContentProxyResponse, ClientApiResponse } from './types';
+import {
+  BrazeContentProxyResponse,
+  ClientApiResponse,
+  TransformedCuratedItem,
+} from './types';
 
 const client = new ApolloClient({
   link: new HttpLink({ fetch, uri: 'https://client-api.getpocket.com' }),
@@ -27,19 +31,25 @@ export async function getStories(
 
   const stories = data ? data.data.scheduledSurface.items : [];
 
-  // Resize images on the fly so that
-  // they don't distort emails
-  // when sent out.
-  // (Was that a haiku?)
-  stories.forEach(function (part, index) {
-    this[index].imageUrl =
-      `${config.images.protocol}://${config.images.host}/${config.images.width}x${config.images.height}/filters:${config.images.filters}/`.concat(
-        encodeURIComponent(this[index].imageUrl)
-      );
-  }, stories);
+  const transformedStories: TransformedCuratedItem[] = stories.map(function (
+    item,
+    index
+  ) {
+    return {
+      ...item,
+      // Resize images on the fly so that they don't distort emails when sent out.
+      imageUrl:
+        `${config.images.protocol}://${config.images.host}/${config.images.width}x${config.images.height}/filters:${config.images.filters}/`.concat(
+          encodeURIComponent(this[index].imageUrl)
+        ),
+      // Flatten the authors into a comma-separated string.
+      authors: this[index].authors.map((author) => author.name).join(', '),
+    };
+  },
+  stories);
 
   return {
-    stories,
+    stories: transformedStories,
   };
 }
 
@@ -61,7 +71,9 @@ async function getData(
               title
               excerpt
               imageUrl
-              # author
+              authors {
+                name
+              }
               publisher
             }
           }
