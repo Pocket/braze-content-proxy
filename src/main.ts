@@ -46,9 +46,11 @@ app.get('/.well-known/server-health', (req, res) => {
 // This is the one and only endpoint planned for this repository,
 // so a separate controller is not necessary.
 app.get('/scheduled-items/:scheduledSurfaceID', async (req, res, next) => {
-  // enable 30 minute cache when in AWS
+  // Enable two minute cache when in AWS.
+  // The short-lived cache is to speed up the curators' workflow
+  // if they need to make last-minute updates.
   if (config.app.environment !== 'development') {
-    res.set('Cache-control', 'public, max-age=1800');
+    res.set('Cache-control', 'public, max-age=120');
   }
 
   // Get the scheduled surface GUID
