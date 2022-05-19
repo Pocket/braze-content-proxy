@@ -5,6 +5,11 @@ export default {
     version: `${process.env.GIT_SHA ?? 'local'}`,
     port: 4500,
   },
+  aws: {
+    region: process.env.REGION || 'us-east-1',
+    brazeApiKey:
+      process.env.BRAZE_API_KEY || 'BrazeContentProxy/Dev/BRAZE_API_KEY',
+  },
   // Params we call Pocket Image Cache with to resize story thumbnails on the fly.
   images: {
     protocol: 'https',
