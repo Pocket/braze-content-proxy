@@ -5,7 +5,7 @@ import config from './config';
 import {
   BrazeContentProxyResponse,
   ClientApiResponse,
-  TransformedCuratedItem,
+  TransformedCorpusItem,
 } from './types';
 import { getResizedImageUrl } from './utils';
 
@@ -32,16 +32,18 @@ export async function getStories(
 
   const stories = data ? data.data.scheduledSurface.items : [];
 
-  const transformedStories: TransformedCuratedItem[] = stories.map(function (
+  const transformedStories: TransformedCorpusItem[] = stories.map(function (
     item,
     index
   ) {
     return {
-      ...item,
+      ...item.corpusItem,
       // Resize images on the fly so that they don't distort emails when sent out.
       imageUrl: getResizedImageUrl(this[index].imageUrl),
       // Flatten the authors into a comma-separated string.
-      authors: this[index].authors.map((author) => author.name).join(', '),
+      authors: this[index].corpusItem.authors
+        ?.map((author) => author.name)
+        .join(', '),
     };
   },
   stories);
