@@ -69,7 +69,7 @@ describe('function validateApiKey', () => {
 });
 
 describe('function getResizedImageUrl', () => {
-  it('should return resize image url with default filters when no filters are provided', async () => {
+  it('should return resize image url with default filters when no filters are provided', () => {
     const imageUrl = 'www.my-image-url.com';
     const resizedImageUrl =
       `${config.images.protocol}://${config.images.host}/${config.images.width}x${config.images.height}/filters:${config.images.filters}/`.concat(
@@ -79,7 +79,7 @@ describe('function getResizedImageUrl', () => {
     expect(getResizedImageUrl(imageUrl)).toEqual(resizedImageUrl);
   });
 
-  it('should return resize image url with the correct filter values', async () => {
+  it('should return resize image url with the correct filter values', () => {
     const imageUrl = 'www.my-image-url.com';
     const customFilters = {
       width: 200,
