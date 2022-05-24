@@ -10,6 +10,12 @@ export default {
     brazeApiKey:
       process.env.BRAZE_API_KEY || 'BrazeContentProxy/Dev/BRAZE_API_KEY',
   },
+  // The URL to query data from.
+  clientApi: {
+    uri: `https://client-api.getpocket.${
+      process.env.NODE_ENV === 'production' ? 'com' : 'dev'
+    }`,
+  },
   // Params we call Pocket Image Cache with to resize story thumbnails on the fly.
   images: {
     protocol: 'https',
