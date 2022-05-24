@@ -1,7 +1,7 @@
 /**
  * The properties of curated items that we need to fetch from Client API.
  */
-export type CuratedItem = {
+export type CorpusItem = {
   url: string;
   title: string;
   excerpt: string;
@@ -10,6 +10,10 @@ export type CuratedItem = {
   publisher: string;
 };
 
+export interface ScheduledSurfaceItem {
+  corpusItem: CorpusItem;
+}
+
 /**
  * The shape of the query returned by Client API that contains curated items
  * scheduled for a given day on a given Pocket Hits surface.
@@ -17,18 +21,18 @@ export type CuratedItem = {
 export type ClientApiResponse = {
   data: {
     scheduledSurface: {
-      items: CuratedItem[];
+      items: ScheduledSurfaceItem[];
     };
   };
 };
 
 /**
- * A very lean Curated Item type with just the data Pocket Hits emails need.
+ * A very lean Corpus Item type with just the data Pocket Hits emails need.
  *
  * Unlike in the Client API response, the Braze Content Proxy response contains
  * a string that lists all the authors for each story, not an object.
  */
-export type TransformedCuratedItem = Omit<CuratedItem, 'authors'> & {
+export type TransformedCorpusItem = Omit<CorpusItem, 'authors'> & {
   authors: string;
 };
 
@@ -36,5 +40,5 @@ export type TransformedCuratedItem = Omit<CuratedItem, 'authors'> & {
  * The response we serve from this proxy for Braze.
  */
 export type BrazeContentProxyResponse = {
-  stories: TransformedCuratedItem[];
+  stories: TransformedCorpusItem[];
 };
