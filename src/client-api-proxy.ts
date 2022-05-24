@@ -9,7 +9,7 @@ import {
 } from './types';
 
 const client = new ApolloClient({
-  link: new HttpLink({ fetch, uri: 'https://client-api.getpocket.com' }),
+  link: new HttpLink({ fetch, uri: config.clientApi.uri }),
   cache: new InMemoryCache(),
   name: config.app.apolloClientName,
   version: config.app.version,
