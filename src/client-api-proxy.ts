@@ -14,6 +14,14 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
   name: config.app.apolloClientName,
   version: config.app.version,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+    },
+    query: {
+      fetchPolicy: 'no-cache',
+    },
+  },
 });
 
 /**
