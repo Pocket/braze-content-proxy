@@ -43,19 +43,36 @@ export function validateDate(date: string): void {
  * @param key
  */
 export async function validateApiKey(key: string): Promise<void> {
-  const ERROR_MESSAGE = 'Please provide a valid API key';
-
   // Fail early on no key provided.
   if (!key) {
-    throw new Error(ERROR_MESSAGE);
+    throw new Error(config.app.INVALID_API_KEY_ERROR_MESSAGE);
   }
 
   const storedKey = config.aws.brazeApiKey;
 
   // Compare the stored key to the one provided by the request to the API.
   if (key !== storedKey) {
-    throw new Error(ERROR_MESSAGE);
+    throw new Error(config.app.INVALID_API_KEY_ERROR_MESSAGE);
   }
 
   return;
+}
+
+/**
+ *
+ * @param imageUrl
+ * @param width
+ * @param height
+ * @param filters
+ * @returns image url with resize filters applied
+ */
+export function getResizedImageUrl(
+  imageUrl: string,
+  width: number = config.images.width,
+  height: number = config.images.height,
+  filters: string = config.images.filters
+): string {
+  return `${config.images.protocol}://${config.images.host}/${width}x${height}/filters:${filters}/`.concat(
+    encodeURIComponent(imageUrl)
+  );
 }

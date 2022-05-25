@@ -7,6 +7,7 @@ import {
   ClientApiResponse,
   TransformedCorpusItem,
 } from './types';
+import { getResizedImageUrl } from './utils';
 
 const client = new ApolloClient({
   link: new HttpLink({ fetch, uri: config.clientApi.uri }),
@@ -38,10 +39,7 @@ export async function getStories(
     return {
       ...item.corpusItem,
       // Resize images on the fly so that they don't distort emails when sent out.
-      imageUrl:
-        `${config.images.protocol}://${config.images.host}/${config.images.width}x${config.images.height}/filters:${config.images.filters}/`.concat(
-          encodeURIComponent(this[index].corpusItem.imageUrl)
-        ),
+      imageUrl: getResizedImageUrl(this[index].corpusItem.imageUrl),
       // Flatten the authors into a comma-separated string.
       authors: this[index].corpusItem.authors
         ?.map((author) => author.name)

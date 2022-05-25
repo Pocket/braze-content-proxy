@@ -10,7 +10,7 @@
     "test-ci": "npm test",
     "test:watch": "npm test -- --watchAll",
     "test": "jest \"\\.spec\\.ts\"",
-    "test-functional": "jest \"\\.functional\\.ts\" --forceExit",
+    "test-integration": "jest \"\\.integration\\.ts\" --forceExit",
     "lint-check": "eslint --fix-dry-run \"src/**/*.ts\"",
     "lint-fix": "eslint --fix \"src/**/*.ts\""
   },

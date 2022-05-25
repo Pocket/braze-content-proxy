@@ -4,6 +4,7 @@ export default {
     apolloClientName: 'BrazeContentProxy',
     version: `${process.env.GIT_SHA ?? 'local'}`,
     port: 4500,
+    INVALID_API_KEY_ERROR_MESSAGE: 'Please provide a valid API key.',
   },
   aws: {
     region: process.env.REGION || 'us-east-1',
