@@ -40,7 +40,7 @@ export async function getStories(
       // Resize images on the fly so that they don't distort emails when sent out.
       imageUrl:
         `${config.images.protocol}://${config.images.host}/${config.images.width}x${config.images.height}/filters:${config.images.filters}/`.concat(
-          encodeURIComponent(this[index].imageUrl)
+          encodeURIComponent(this[index].corpusItem.imageUrl)
         ),
       // Flatten the authors into a comma-separated string.
       authors: this[index].corpusItem.authors
