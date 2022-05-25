@@ -39,7 +39,7 @@ export async function getStories(
     return {
       ...item.corpusItem,
       // Resize images on the fly so that they don't distort emails when sent out.
-      imageUrl: getResizedImageUrl(this[index].imageUrl),
+      imageUrl: getResizedImageUrl(this[index].corpusItem.imageUrl),
       // Flatten the authors into a comma-separated string.
       authors: this[index].corpusItem.authors
         ?.map((author) => author.name)
