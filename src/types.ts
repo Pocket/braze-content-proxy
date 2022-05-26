@@ -11,6 +11,7 @@ export type CorpusItem = {
 };
 
 export interface ScheduledSurfaceItem {
+  id: string;
   corpusItem: CorpusItem;
 }
 
@@ -28,12 +29,13 @@ export type ClientApiResponse = {
 
 /**
  * A very lean Corpus Item type with just the data Pocket Hits emails need.
- *
- * Unlike in the Client API response, the Braze Content Proxy response contains
- * a string that lists all the authors for each story, not an object.
  */
 export type TransformedCorpusItem = Omit<CorpusItem, 'authors'> & {
+  // Unlike in the Client API response, the Braze Content Proxy response contains
+  // a string that lists all the authors for each story, not an object.
   authors: string;
+  // This value is the id of the Scheduled Surface Item, rather than the Corpus Item
+  id: string;
 };
 
 /**

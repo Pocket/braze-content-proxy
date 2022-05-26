@@ -26,6 +26,7 @@ describe('main.integration.ts', () => {
     const testStories = {
       stories: [
         {
+          id: '123-abc',
           url: 'www.test-url.com',
           title: 'test-title',
           excerpt: 'test-excerpt',
@@ -34,6 +35,7 @@ describe('main.integration.ts', () => {
           publisher: 'test-publisher',
         },
         {
+          id: '456-cde',
           url: 'www.second-test-url.com',
           title: 'second-test-title',
           excerpt: 'second-test-excerpt',
