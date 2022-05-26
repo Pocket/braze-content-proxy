@@ -45,6 +45,9 @@ export async function getStories(
     index
   ) {
     return {
+      // The id of the Scheduled Surface Item
+      id: item.id,
+      // Properties of the Corpus Item the proxy needs to make available for Braze
       ...item.corpusItem,
       // Resize images on the fly so that they don't distort emails when sent out.
       imageUrl: getResizedImageUrl(this[index].corpusItem.imageUrl),
@@ -74,8 +77,8 @@ async function getData(
       query PocketHits($date: Date!, $scheduledSurfaceId: ID!) {
         scheduledSurface(id: $scheduledSurfaceId) {
           items(date: $date) {
+            id
             corpusItem {
-              id
               url
               title
               excerpt
