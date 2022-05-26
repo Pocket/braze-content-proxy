@@ -2,6 +2,7 @@
  * The properties of curated items that we need to fetch from Client API.
  */
 export type CorpusItem = {
+  id: string;
   url: string;
   title: string;
   excerpt: string;

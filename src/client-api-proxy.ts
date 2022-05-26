@@ -75,6 +75,7 @@ async function getData(
         scheduledSurface(id: $scheduledSurfaceId) {
           items(date: $date) {
             corpusItem {
+              id
               url
               title
               excerpt
