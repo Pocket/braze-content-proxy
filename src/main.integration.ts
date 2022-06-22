@@ -2,11 +2,21 @@ import { expect } from 'chai';
 import { app } from './main';
 import request from 'supertest';
 import config from './config';
+import sinon from 'sinon';
+import * as Sentry from '@sentry/node';
 
 import * as clientApiProxy from './client-api-proxy';
 
 describe('main.integration.ts', () => {
   const requestAgent = request.agent(app);
+
+  beforeEach(() => {
+    sinon.restore();
+  });
+
+  afterAll(() => {
+    sinon.restore();
+  });
 
   describe('health endpoint', () => {
     it('should return 200 OK', async () => {
@@ -45,6 +55,18 @@ describe('main.integration.ts', () => {
         },
       ],
     };
+    it('logs error to Sentry if getStories takes more than 2 seconds', async () => {
+      const sentryStub = sinon.stub(Sentry, Sentry.captureException);
+      // stub the getStories to be > 2 seconds
+      // invoke
+      expect(sentryStub.callCount).to.equal(1);
+    });
+    it('does not log error if getStories takes less than 2 seconds', async () => {
+      const sentryStub = sinon.stub(Sentry, Sentry.captureException);
+      // stub the getStories to be > 2 seconds
+      // invoke
+      expect(sentryStub.callCount).to.equal(0);
+    });
 
     it('should return 200 OK and correct headers when valid query params are provided', async () => {
       const response = await requestAgent.get(validUrl);

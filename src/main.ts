@@ -71,7 +71,7 @@ app.get('/scheduled-items/:scheduledSurfaceID', async (req, res, next) => {
     await validateApiKey(apiKey);
 
     // Fetch data
-    return res.json(await getStories(date, scheduledSurfaceID));
+    res.json(await getStories(date, scheduledSurfaceID));
   } catch (err) {
     // Let Express handle any errors
     next(err);
