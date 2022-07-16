@@ -50,7 +50,7 @@
     "jest": "27.5.1",
     "nock": "13.2.8",
     "nodemon": "2.0.18",
-    "prettier": "2.5.1",
+    "prettier": "2.7.1",
     "supertest": "6.2.3",
     "ts-jest": "27.1.5",
     "ts-node": "10.5.0",
