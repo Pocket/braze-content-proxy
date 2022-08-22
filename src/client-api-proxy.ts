@@ -1,4 +1,4 @@
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core';
 import gql from 'graphql-tag';
 import fetch from 'cross-fetch';
 import config from './config';
