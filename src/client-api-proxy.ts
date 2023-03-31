@@ -9,7 +9,7 @@ import {
 } from './types';
 import { getResizedImageUrl } from './utils';
 
-const client = new ApolloClient({
+export const client = new ApolloClient({
   link: new HttpLink({ fetch, uri: config.clientApi.uri }),
   cache: new InMemoryCache(),
   name: config.app.apolloClientName,
@@ -106,3 +106,5 @@ async function getData(
 
   return data;
 }
+
+
