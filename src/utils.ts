@@ -76,10 +76,3 @@ export function getResizedImageUrl(
     encodeURIComponent(imageUrl)
   );
 }
-
-export class NotFoundError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'NotFoundError';
-  }
-}

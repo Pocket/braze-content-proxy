@@ -25,29 +25,6 @@ describe(`get collection test`, () => {
     expect(response.headers['cache-control']).to.equal('public, max-age=120');
   });
 
-  it('should return 404 for not found collections', async () => {
-    const testSlug = 'this-is-not-found-slug';
-    const notFoundErrorResponse = {
-      "errors": [
-        {
-          "message": "Error - Not Found: bla-string",
-          "path": [
-            "getCollectionBySlug"
-          ],
-          "extensions": {
-            "code": "NOT_FOUND",
-            "serviceName": "collection"
-          }
-        }
-      ],
-    }
-    jest.spyOn(client,'query').mockResolvedValue(notFoundErrorResponse as any);
-    const response = await requestAgent.get(
-      `/collection/${testSlug}?apikey=${config.aws.brazeApiKey}`
-    );
-    expect(response.statusCode).equals(404);
-  });
-
   it('should return 500 if invalid api key is provided ', async () => {
     const serverError = {
       "errors": [

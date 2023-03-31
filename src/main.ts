@@ -6,7 +6,6 @@ import express, { Express } from 'express';
 import config from './config';
 import { getStories } from './routes/scheduledStories';
 import {
-  NotFoundError,
   validateApiKey,
   validateDate,
   validateScheduledSurfaceGuid
@@ -102,10 +101,7 @@ app.get('/collection/:slug', async (req, res, next) => {
     // Fetch data
     return res.json(await getCollection(slug));
   } catch (err) {
-    //handle not found, otherwise let Express handle any errors
-    if(err instanceof NotFoundError) {
-      return res.status(404).json({ error: err.message });
-    }
+    // Let Express handle any errors
     next(err);
   }
 });

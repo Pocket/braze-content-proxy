@@ -2,7 +2,6 @@ import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core';
 import fetch from 'cross-fetch';
 import config from '../config';
 import gql from 'graphql-tag';
-import { NotFoundError } from '../utils';
 import { ClientApiResponse } from './types';
 
 export const client = new ApolloClient({
@@ -57,12 +56,6 @@ export async function getCollectionsFromGraph(
       slug: slug,
     },
   });
-
-  if(response?.errors?.[0].extensions?.code == 'NOT_FOUND') {
-    throw new NotFoundError(
-      `No collection found for ${slug}.`
-    );
-  }
 
   //if its not-found and we still don't have data, throw error
   if (!response.data?.getCollectionBySlug) {
