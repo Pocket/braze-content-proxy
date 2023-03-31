@@ -36,7 +36,6 @@ router.get('/:slug', async (req, res, next) => {
   }
 });
 
-
 /**
  * fetch collections and transform them to braze payload
  * @param response
@@ -46,20 +45,19 @@ export async function getCollection(slug: string) {
   return transformToBrazePayload(response);
 }
 
-
-function transformToBrazePayload(response) : BrazeCollections {
+function transformToBrazePayload(response): BrazeCollections {
   const collection = response.data.getCollectionBySlug;
-  const stories = collection.stories.map(story => {
+  const stories = collection.stories.map((story) => {
     return {
       ...story,
       imageUrl: getResizedImageUrl(story.imageUrl),
-      authors: story.authors.map(author => author.name)
-    }
+      authors: story.authors.map((author) => author.name),
+    };
   });
   return {
     ...collection,
     imageUrl: getResizedImageUrl(collection.imageUrl),
-    stories: stories
-  }
+    stories: stories,
+  };
 }
 export default router;

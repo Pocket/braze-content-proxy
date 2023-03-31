@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { app } from '../main';
 import request from 'supertest';
 import config from '../config';
-import {stories} from  './scheduledItems';
+import { stories } from './scheduledItems';
 
 describe('/scheduled-items/:scheduledSurfaceID?date=date&apikey=apikey', () => {
   const requestAgent = request.agent(app);

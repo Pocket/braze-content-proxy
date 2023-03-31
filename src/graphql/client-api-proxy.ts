@@ -19,38 +19,35 @@ export const client = new ApolloClient({
   },
 });
 
-
 /**
  * calls client API to get collections information
  * @param slug slug identifier of the collction
  * @returns collections and its story details required by braze
  */
-export async function getCollectionsFromGraph(
-  slug: string
-): Promise<any> {
+export async function getCollectionsFromGraph(slug: string): Promise<any> {
   const response = await client.query({
     query: gql`
-        query PocketCollections($slug: String!) {
-            getCollectionBySlug(slug: $slug) {
-                externalId
-                title
-                excerpt
-                imageUrl
-                intro
-                publishedAt
-                stories {
-                    externalId
-                    title
-                    externalId
-                    imageUrl
-                    publisher
-                    authors {
-                        name
-                    }
-                    url
-                }
+      query PocketCollections($slug: String!) {
+        getCollectionBySlug(slug: $slug) {
+          externalId
+          title
+          excerpt
+          imageUrl
+          intro
+          publishedAt
+          stories {
+            externalId
+            title
+            externalId
+            imageUrl
+            publisher
+            authors {
+              name
             }
+            url
+          }
         }
+      }
     `,
     variables: {
       slug: slug,
@@ -80,23 +77,23 @@ export async function getScheduledSurfaceStories(
 ): Promise<ClientApiResponse | null> {
   const data = await client.query({
     query: gql`
-        query PocketHits($date: Date!, $scheduledSurfaceId: ID!) {
-            scheduledSurface(id: $scheduledSurfaceId) {
-                items(date: $date) {
-                    id
-                    corpusItem {
-                        url
-                        title
-                        excerpt
-                        imageUrl
-                        authors {
-                            name
-                        }
-                        publisher
-                    }
-                }
+      query PocketHits($date: Date!, $scheduledSurfaceId: ID!) {
+        scheduledSurface(id: $scheduledSurfaceId) {
+          items(date: $date) {
+            id
+            corpusItem {
+              url
+              title
+              excerpt
+              imageUrl
+              authors {
+                name
+              }
+              publisher
             }
+          }
         }
+      }
     `,
     variables: {
       date,
@@ -111,5 +108,3 @@ export async function getScheduledSurfaceStories(
   }
   return data;
 }
-
-

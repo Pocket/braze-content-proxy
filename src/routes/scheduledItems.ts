@@ -1,9 +1,11 @@
-import {
-  BrazeContentProxyResponse,
-  TransformedCorpusItem,
-} from './types';
+import { BrazeContentProxyResponse, TransformedCorpusItem } from './types';
 import { ClientApiResponse } from '../graphql/types';
-import { getResizedImageUrl, validateApiKey, validateDate, validateScheduledSurfaceGuid } from '../utils';
+import {
+  getResizedImageUrl,
+  validateApiKey,
+  validateDate,
+  validateScheduledSurfaceGuid,
+} from '../utils';
 import { getScheduledSurfaceStories } from '../graphql/client-api-proxy';
 import config from '../config';
 import { Router } from 'express';
@@ -45,7 +47,10 @@ router.get('/:scheduledSurfaceID', async (req, res, next) => {
  * note: getStories is wrapped inside object to enable mocking testing.
  */
 export const stories = {
-  getStories: async (date: string, scheduledSurfaceId: string) : Promise<BrazeContentProxyResponse>  => {
+  getStories: async (
+    date: string,
+    scheduledSurfaceId: string
+  ): Promise<BrazeContentProxyResponse> => {
     const data: ClientApiResponse | null = await getScheduledSurfaceStories(
       date,
       scheduledSurfaceId
@@ -54,29 +59,28 @@ export const stories = {
     const stories = data ? data.data.scheduledSurface.items : [];
 
     const transformedStories: TransformedCorpusItem[] = stories.map(function (
-        item,
-        index
-      ) {
-        return {
-          // The id of the Scheduled Surface Item
-          id: item.id,
-          // Properties of the Corpus Item the proxy needs to make available for Braze
-          ...item.corpusItem,
-          // Resize images on the fly so that they don't distort emails when sent out.
-          imageUrl: getResizedImageUrl(this[index].corpusItem.imageUrl),
-          // Flatten the authors into a comma-separated string.
-          authors: this[index].corpusItem.authors
-            ?.map((author) => author.name)
-            .join(', '),
-        };
-      },
-      stories);
+      item,
+      index
+    ) {
+      return {
+        // The id of the Scheduled Surface Item
+        id: item.id,
+        // Properties of the Corpus Item the proxy needs to make available for Braze
+        ...item.corpusItem,
+        // Resize images on the fly so that they don't distort emails when sent out.
+        imageUrl: getResizedImageUrl(this[index].corpusItem.imageUrl),
+        // Flatten the authors into a comma-separated string.
+        authors: this[index].corpusItem.authors
+          ?.map((author) => author.name)
+          .join(', '),
+      };
+    },
+    stories);
 
     return {
       stories: transformedStories,
     };
-  }
+  },
 };
 
 export default router;
-

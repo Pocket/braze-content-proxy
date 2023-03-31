@@ -46,9 +46,8 @@ app.get('/.well-known/server-health', (req, res) => {
 // This is the one and only endpoint planned for this repository,
 // so a separate controller is not necessary.
 
-
-app.use('/collection/',collectionRouter);
-app.use('/scheduled-items/',scheduledStoriesRouter);
+app.use('/collection/', collectionRouter);
+app.use('/scheduled-items/', scheduledStoriesRouter);
 
 //Make sure the express app has the xray close segment handler
 app.use(xrayExpress.closeSegment());

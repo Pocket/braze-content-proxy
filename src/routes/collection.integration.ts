@@ -13,7 +13,9 @@ describe(`get collection test`, () => {
   it(`/get collection should return braze collection payload`, async () => {
     const testSlug = 'the-world-as-explained-by-pop-culture';
     // spying on the getStories function to make it return a mock response
-    jest.spyOn(client,'query').mockResolvedValue(graphCollectionFixture as any);
+    jest
+      .spyOn(client, 'query')
+      .mockResolvedValue(graphCollectionFixture as any);
     const response = await request(app).get(
       `/collection/${testSlug}?apikey=${config.aws.brazeApiKey}`
     );
@@ -25,23 +27,21 @@ describe(`get collection test`, () => {
 
   it('should return 500 if collection is not found', async () => {
     const notFoundGraphError = {
-      "errors": [
+      errors: [
         {
-          "message": "Error - Not Found: not-found",
-          "path": [
-            "getCollectionBySlug"
-          ],
-          "extensions": {
-            "code": "NOT_FOUND",
-            "serviceName": "collection"
-          }
-        }
+          message: 'Error - Not Found: not-found',
+          path: ['getCollectionBySlug'],
+          extensions: {
+            code: 'NOT_FOUND',
+            serviceName: 'collection',
+          },
+        },
       ],
-      "data": {
-        "getCollectionBySlug": null
-      }
+      data: {
+        getCollectionBySlug: null,
+      },
     };
-    jest.spyOn(client,'query').mockResolvedValue(notFoundGraphError as any);
+    jest.spyOn(client, 'query').mockResolvedValue(notFoundGraphError as any);
     const response = await request(app).get(
       `/collection/not-found-slug?apikey=${config.aws.brazeApiKey}`
     );

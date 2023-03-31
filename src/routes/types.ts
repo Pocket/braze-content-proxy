@@ -15,8 +15,6 @@ export interface ScheduledSurfaceItem {
   corpusItem: CorpusItem;
 }
 
-
-
 /**
  * A very lean Corpus Item type with just the data Pocket Hits emails need.
  */
@@ -39,19 +37,19 @@ export type BrazeContentProxyResponse = {
  * response payload type for /GET collections call
  */
 export type BrazeCollections = {
-  title : string,
-  excerpt : string,
-  imageUrl : string,
-  intro : string,
-  publishedAt : string,
-  stories: BrazeCollectionStory[]
-}
+  title: string;
+  excerpt: string;
+  imageUrl: string;
+  intro: string;
+  publishedAt: string;
+  stories: BrazeCollectionStory[];
+};
 
 type BrazeCollectionStory = {
-  title : string,
-  url : string,
-  excerpt : string,
-  imageUrl: string,
-  publisher : string,
-  authors : string[]
-}
+  title: string;
+  url: string;
+  excerpt: string;
+  imageUrl: string;
+  publisher: string;
+  authors: string[];
+};
