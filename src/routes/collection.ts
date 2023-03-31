@@ -19,10 +19,6 @@ router.get('/:slug', async (req, res, next) => {
   }
 
   const slug = req.params.slug;
-  //todo: option to set image dimensions
-  // const imageWidth = req.query.image_width ?? config.images.width;
-  // const imageHeight = req.query.image_height ?? config.images.height;
-
   // Get the API key
   const apiKey = req.query.apikey as string;
 
