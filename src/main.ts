@@ -4,13 +4,8 @@ import * as Sentry from '@sentry/node';
 import https from 'https';
 import express, { Express } from 'express';
 import config from './config';
-import { getStories } from './routes/scheduledStories';
-import {
-  validateApiKey,
-  validateDate,
-  validateScheduledSurfaceGuid
-} from './utils';
-import { getCollection } from './routes/collections';
+import collectionRouter from './routes/collection';
+import scheduledStoriesRouter from './routes/scheduledItems';
 
 // TODO: copy .aws directory from client-api
 
@@ -50,61 +45,10 @@ app.get('/.well-known/server-health', (req, res) => {
 
 // This is the one and only endpoint planned for this repository,
 // so a separate controller is not necessary.
-app.get('/scheduled-items/:scheduledSurfaceID', async (req, res, next) => {
-  // Enable two minute cache when in AWS.
-  // The short-lived cache is to speed up the curators' workflow
-  // if they need to make last-minute updates.
-  if (config.app.environment !== 'development') {
-    res.set('Cache-control', 'public, max-age=120');
-  }
 
-  // Get the scheduled surface GUID
-  const scheduledSurfaceID = req.params.scheduledSurfaceID;
-  // Get the date the stories are scheduled for
-  const date = req.query.date as string;
-  // Get the API key
-  const apiKey = req.query.apikey as string;
 
-  try {
-    // Validate inputs
-    validateScheduledSurfaceGuid(scheduledSurfaceID);
-    validateDate(date);
-    await validateApiKey(apiKey);
-
-    // Fetch data
-    return res.json(await getStories(date, scheduledSurfaceID));
-  } catch (err) {
-    // Let Express handle any errors
-    next(err);
-  }
-});
-
-app.get('/collection/:slug', async (req, res, next) => {
-  // Enable two minute cache when in AWS.
-  // The short-lived cache is to speed up the curators' workflow
-  // if they need to make last-minute updates.
-  if (config.app.environment !== 'development') {
-    res.set('Cache-control', 'public, max-age=120');
-  }
-
-  // Get the scheduled surface GUID
-  const slug = req.params.slug;
-  //todo: option to set image dimensions
-  // const imageWidth = req.query.image_width ?? config.images.width;
-  // const imageHeight = req.query.image_height ?? config.images.height;
-
-  // Get the API key
-  const apiKey = req.query.apikey as string;
-
-  try {
-    await validateApiKey(apiKey);
-    // Fetch data
-    return res.json(await getCollection(slug));
-  } catch (err) {
-    // Let Express handle any errors
-    next(err);
-  }
-});
+app.use('/collection/',collectionRouter);
+app.use('/scheduled-items/',scheduledStoriesRouter);
 
 //Make sure the express app has the xray close segment handler
 app.use(xrayExpress.closeSegment());
