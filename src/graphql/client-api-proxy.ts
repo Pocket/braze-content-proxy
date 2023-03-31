@@ -54,7 +54,6 @@ export async function getCollectionsFromGraph(slug: string): Promise<any> {
     },
   });
 
-  //if its not-found and we still don't have data, throw error
   if (!response.data?.getCollectionBySlug) {
     throw new Error(
       `server error: unable to fetch collections for slug: ${slug}.`
