@@ -4,11 +4,12 @@ import * as Sentry from '@sentry/node';
 import https from 'https';
 import express, { Express } from 'express';
 import config from './config';
-import { getStories } from './client-api-proxy';
+import { getStories } from './getScheduledStories';
 import {
+  NotFoundError,
   validateApiKey,
   validateDate,
-  validateScheduledSurfaceGuid,
+  validateScheduledSurfaceGuid
 } from './utils';
 import { getCollection } from './collections';
 
@@ -101,7 +102,10 @@ app.get('/collection/:slug', async (req, res, next) => {
     // Fetch data
     return res.json(await getCollection(slug));
   } catch (err) {
-    // Let Express handle any errors
+    //handle not found, otherwise let Express handle any errors
+    if(err instanceof NotFoundError) {
+      return res.status(404).json({ error: err.message });
+    }
     next(err);
   }
 });

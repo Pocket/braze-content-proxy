@@ -1,16 +1,16 @@
 import { ClientApiResponse } from './types';
 import gql from 'graphql-tag';
-import { client } from './client-api-proxy';
-import { getResizedImageUrl } from './utils';
+import { client } from './client';
+import { getResizedImageUrl, NotFoundError } from './utils';
 
 /**
  * calls client API to get collections information
  * @param slug slug identifier of the collction
  * @returns collections and its story details required by braze
  */
-async function getCollectionsFromGraph(
+export async function getCollectionsFromGraph(
   slug: string
-): Promise<ClientApiResponse | null> {
+): Promise<any> {
   const response = await client.query({
     query: gql`
         query PocketCollections($slug: String!) {
@@ -40,9 +40,16 @@ async function getCollectionsFromGraph(
     },
   });
 
+  if(response?.errors?.[0].extensions?.code == 'NOT_FOUND') {
+    throw new NotFoundError(
+      `No collection found for ${slug}.`
+    );
+  }
+
+  //if its not-found and we still don't have data, throw error
   if (!response.data?.getCollectionBySlug) {
     throw new Error(
-      `No collection returned for ${slug}.`
+      `server error: unable to fetch collections for slug: ${slug}.`
     );
   }
 
@@ -63,25 +70,19 @@ function transformToBrazePayload(response, width?, height?) : BrazeCollections {
   const collection = response.data.getCollectionBySlug;
   const stories = collection.stories.map(story => {
     return {
-      title: story.title,
-      url: story.url,
-      excerpt: story.excerpt,
+      ...story,
       imageUrl: getResizedImageUrl(story.imageUrl),
-      publisher: story.publisher,
       authors: story.authors.map(author => author.name)
     }
   });
   return {
-    title: collection.title,
-    excerpt: collection.excerpt,
+    ...collection,
     imageUrl: getResizedImageUrl(collection.imageUrl),
-    intro: collection.intro,
-    publishedAt: collection.publishedAt,
     stories: stories
   }
 }
 
-type BrazeCollections = {
+export type BrazeCollections = {
   title : string,
   excerpt : string,
   imageUrl : string,

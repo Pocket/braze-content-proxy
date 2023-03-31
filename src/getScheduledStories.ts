@@ -1,28 +1,12 @@
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client/core';
 import gql from 'graphql-tag';
-import fetch from 'cross-fetch';
-import config from './config';
 import {
   BrazeContentProxyResponse,
   ClientApiResponse,
   TransformedCorpusItem,
 } from './types';
 import { getResizedImageUrl } from './utils';
+import { client } from './client';
 
-export const client = new ApolloClient({
-  link: new HttpLink({ fetch, uri: config.clientApi.uri }),
-  cache: new InMemoryCache(),
-  name: config.app.apolloClientName,
-  version: config.app.version,
-  defaultOptions: {
-    watchQuery: {
-      fetchPolicy: 'no-cache',
-    },
-    query: {
-      fetchPolicy: 'no-cache',
-    },
-  },
-});
 
 /**
  * Entry point to this module. Retrieves data from Client API and transforms it
@@ -103,7 +87,6 @@ async function getData(
       `No data returned for ${scheduledSurfaceId} scheduled on ${date}.`
     );
   }
-
   return data;
 }
 

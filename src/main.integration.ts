@@ -3,7 +3,7 @@ import { app } from './main';
 import request from 'supertest';
 import config from './config';
 
-import * as clientApiProxy from './client-api-proxy';
+import * as clientApiProxy from './getScheduledStories';
 
 describe('main.integration.ts', () => {
   const requestAgent = request.agent(app);
