@@ -59,7 +59,7 @@ and wait for the deployment to complete (~10 minutes).
 # params required
 https://braze-content-proxy.getpocket.dev/scheduled-items/[SCHEDULED_SURFACE_GUID]/?date=[DATE_IN_YYYY-MM-DD_FORMAT]&apikey=[LOOK_UP_THE_KEY_IN_AWS]
 # sample URL (don't forget to supply the API key)
-https://braze-content-proxy.getpocket.dev/scheduled-items/POCKET_HITS_EN_US/?date=2022-05-27&apikey=E5UafJY36vnzZkNCAPH73So3iPXV78Ew
+https://braze-content-proxy.getpocket.dev/scheduled-items/POCKET_HITS_EN_US/?date=2022-05-27&apikey=[INSERT_API_KEY]
 ```
 - to get a collection by slug:
 ```bash
