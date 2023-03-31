@@ -1,11 +1,11 @@
 import gql from 'graphql-tag';
 import {
   BrazeContentProxyResponse,
-  ClientApiResponse,
   TransformedCorpusItem,
 } from './types';
-import { getResizedImageUrl } from './utils';
-import { client } from './client';
+import { ClientApiResponse } from '../graphql/types';
+import { getResizedImageUrl } from '../utils';
+import { getScheduledSurfaceStories } from '../graphql/client-api-proxy';
 
 
 /**
@@ -17,7 +17,7 @@ export async function getStories(
   scheduledSurfaceId: string
 ): Promise<BrazeContentProxyResponse> {
   // Retrieve data
-  const data: ClientApiResponse | null = await getData(
+  const data: ClientApiResponse | null = await getScheduledSurfaceStories(
     date,
     scheduledSurfaceId
   );
@@ -47,47 +47,4 @@ export async function getStories(
     stories: transformedStories,
   };
 }
-
-/**
- * Calls Client API to get Pocket Hits stories for a given Pocket Hits surface
- * and date (in "YYYY-MM-DD" format).
- */
-async function getData(
-  date: string,
-  scheduledSurfaceId: string
-): Promise<ClientApiResponse | null> {
-  const data = await client.query({
-    query: gql`
-      query PocketHits($date: Date!, $scheduledSurfaceId: ID!) {
-        scheduledSurface(id: $scheduledSurfaceId) {
-          items(date: $date) {
-            id
-            corpusItem {
-              url
-              title
-              excerpt
-              imageUrl
-              authors {
-                name
-              }
-              publisher
-            }
-          }
-        }
-      }
-    `,
-    variables: {
-      date,
-      scheduledSurfaceId,
-    },
-  });
-
-  if (!data.data?.scheduledSurface?.items) {
-    throw new Error(
-      `No data returned for ${scheduledSurfaceId} scheduled on ${date}.`
-    );
-  }
-  return data;
-}
-
 

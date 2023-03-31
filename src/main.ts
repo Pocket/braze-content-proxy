@@ -4,14 +4,14 @@ import * as Sentry from '@sentry/node';
 import https from 'https';
 import express, { Express } from 'express';
 import config from './config';
-import { getStories } from './getScheduledStories';
+import { getStories } from './routes/scheduledStories';
 import {
   NotFoundError,
   validateApiKey,
   validateDate,
   validateScheduledSurfaceGuid
 } from './utils';
-import { getCollection } from './collections';
+import { getCollection } from './routes/collections';
 
 // TODO: copy .aws directory from client-api
 

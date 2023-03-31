@@ -15,17 +15,7 @@ export interface ScheduledSurfaceItem {
   corpusItem: CorpusItem;
 }
 
-/**
- * The shape of the query returned by Client API that contains curated items
- * scheduled for a given day on a given Pocket Hits surface.
- */
-export type ClientApiResponse = {
-  data: {
-    scheduledSurface: {
-      items: ScheduledSurfaceItem[];
-    };
-  };
-};
+
 
 /**
  * A very lean Corpus Item type with just the data Pocket Hits emails need.
@@ -44,3 +34,24 @@ export type TransformedCorpusItem = Omit<CorpusItem, 'authors'> & {
 export type BrazeContentProxyResponse = {
   stories: TransformedCorpusItem[];
 };
+
+/**
+ * response payload type for /GET collections call
+ */
+export type BrazeCollections = {
+  title : string,
+  excerpt : string,
+  imageUrl : string,
+  intro : string,
+  publishedAt : string,
+  stories: BrazeCollectionStory[]
+}
+
+type BrazeCollectionStory = {
+  title : string,
+  url : string,
+  excerpt : string,
+  imageUrl: string,
+  publisher : string,
+  authors : string[]
+}

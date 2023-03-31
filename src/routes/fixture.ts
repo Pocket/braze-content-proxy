@@ -1,7 +1,5 @@
-import { BrazeContentProxyResponse } from './types';
-import { BrazeCollections } from './collections';
-import config from './config';
-import { getResizedImageUrl } from './utils';
+import { BrazeCollections } from './types';
+import { getResizedImageUrl } from '../utils';
 
 export const graphCollectionFixture ={
   data: {

@@ -1,10 +1,10 @@
 import { expect } from 'chai';
-import config from './config';
+import config from '../config';
 import request from 'supertest';
-import { app } from './main';
+import { app } from '../main';
 import { brazeCollectionsFixture, graphCollectionFixture } from './fixture';
 import * as collection from './collections'
-import { client } from './client';
+import { client } from '../graphql/client-api-proxy';
 
 describe(`get collection test`, () => {
   const requestAgent = request.agent(app);
@@ -12,7 +12,7 @@ describe(`get collection test`, () => {
     jest.clearAllMocks();
   });
 
-  it(`/get collection should return collection`, async () => {
+  it(`/get collection should return braze collection payload`, async () => {
     const testSlug = 'the-world-as-explained-by-pop-culture';
     // spying on the getStories function to make it return a mock response
     jest.spyOn(client,'query').mockResolvedValue(graphCollectionFixture as any);
@@ -21,6 +21,8 @@ describe(`get collection test`, () => {
     );
     expect(response.statusCode).equals(200);
     expect(response.body).to.deep.equal(brazeCollectionsFixture);
+    expect(response.headers['cache-control']).to.not.be.undefined;
+    expect(response.headers['cache-control']).to.equal('public, max-age=120');
   });
 
   it('should return 404 for not found collections', async () => {
