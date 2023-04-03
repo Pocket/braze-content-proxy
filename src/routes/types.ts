@@ -8,6 +8,7 @@ export type CorpusItem = {
   imageUrl: string;
   authors: { name: string };
   publisher: string;
+  topic: string;
 };
 
 export interface ScheduledSurfaceItem {

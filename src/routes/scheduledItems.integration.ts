@@ -21,6 +21,7 @@ describe('/scheduled-items/:scheduledSurfaceID?date=date&apikey=apikey', () => {
         imageUrl: 'www.test-image-url.com',
         authors: 'test-author',
         publisher: 'test-publisher',
+        topic: 'health and fitness',
       },
       {
         id: '456-cde',
@@ -30,6 +31,7 @@ describe('/scheduled-items/:scheduledSurfaceID?date=date&apikey=apikey', () => {
         imageUrl: 'www.second-test-image-url.com',
         authors: 'second-test-author',
         publisher: 'second-test-publisher',
+        topic: 'entertainment',
       },
     ],
   };

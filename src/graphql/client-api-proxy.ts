@@ -83,6 +83,7 @@ export async function getScheduledSurfaceStories(
             corpusItem {
               url
               title
+              topic
               excerpt
               imageUrl
               authors {
