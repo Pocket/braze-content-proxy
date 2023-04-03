@@ -54,14 +54,20 @@ git push -f origin YOUR_BRANCH_HERE:dev
 ```
 and wait for the deployment to complete (~10 minutes).
 
-- Request the URL with all the required parameters:
-
+- to get scheduled items for a given day:
 ```bash
 # params required
 https://braze-content-proxy.getpocket.dev/scheduled-items/[SCHEDULED_SURFACE_GUID]/?date=[DATE_IN_YYYY-MM-DD_FORMAT]&apikey=[LOOK_UP_THE_KEY_IN_AWS]
-
 # sample URL (don't forget to supply the API key)
-https://braze-content-proxy.getpocket.dev/scheduled-items/POCKET_HITS_EN_US/?date=2022-05-27&apikey=
+https://braze-content-proxy.getpocket.dev/scheduled-items/POCKET_HITS_EN_US/?date=2022-05-27&apikey=[INSERT_API_KEY]
 ```
+- to get a collection by slug:
+```bash
+# params required
+https://braze-content-proxy.getpocket.dev/collection/[COLLECTION_SLUG]/?apikey=[LOOK_UP_THE_KEY_IN_AWS]
+# sample URL (don't forget to supply the API key)
+https://braze-content-proxy.getpocket.dev/collection/halloween-history?apikey=[LOOK_UP_THE_KEY_IN_AWS]
+```
+
 
 - Now you can do a sanity check for the data returned by the proxy.
