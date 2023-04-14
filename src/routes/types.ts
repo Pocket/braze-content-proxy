@@ -3,6 +3,7 @@
  */
 export type CorpusItem = {
   url: string;
+  shortUrl: string;
   title: string;
   excerpt: string;
   imageUrl: string;
