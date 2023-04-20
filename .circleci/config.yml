@@ -47,7 +47,7 @@ only_dev: &only_dev
 jobs:
   build:
     docker:
-      - image: cimg/node:18.0.0
+      - image: cimg/node:18.0.0@sha256:ef1eddccf79ba70c831f9441bbb79ffea55dab96c4c6f4748f6583df05d539e7
     steps:
       - checkout
       # Define the working directory for this job
@@ -93,7 +93,7 @@ jobs:
     # Example for running integration tests using a docker container
     description: Run integration tests to validate status and return type from endpoint
     docker:
-      - image: cimg/node:18.0.0
+      - image: cimg/node:18.0.0@sha256:ef1eddccf79ba70c831f9441bbb79ffea55dab96c4c6f4748f6583df05d539e7
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
@@ -129,7 +129,7 @@ jobs:
   test_specs:
     description: Run spec tests
     docker:
-      - image: cimg/node:18.0.0
+      - image: cimg/node:18.0.0@sha256:ef1eddccf79ba70c831f9441bbb79ffea55dab96c4c6f4748f6583df05d539e7
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
