@@ -5,16 +5,20 @@ import {
   RemoteBackend,
   TerraformStack,
 } from 'cdktf';
-import { AwsProvider, kms, datasources, sns } from '@cdktf/provider-aws';
+import { AwsProvider } from '@cdktf/provider-aws/lib/provider';
+import { DataAwsCallerIdentity } from '@cdktf/provider-aws/lib/data-aws-caller-identity';
+import { DataAwsRegion } from '@cdktf/provider-aws/lib/data-aws-region';
+import { DataAwsSnsTopic } from '@cdktf/provider-aws/lib/data-aws-sns-topic';
+import { DataAwsKmsAlias } from '@cdktf/provider-aws/lib/data-aws-kms-alias';
 import { config } from './config';
 import {
   PocketALBApplication,
   PocketECSCodePipeline,
   PocketPagerDuty,
 } from '@pocket-tools/terraform-modules';
-import { PagerdutyProvider } from '@cdktf/provider-pagerduty';
-import { LocalProvider } from '@cdktf/provider-local';
-import { NullProvider } from '@cdktf/provider-null';
+import { LocalProvider } from '@cdktf/provider-local/lib/provider';
+import { NullProvider } from '@cdktf/provider-null/lib/provider';
+import { PagerdutyProvider } from '@cdktf/provider-pagerduty/lib/provider';
 import * as fs from 'fs';
 
 class BrazeContentProxy extends TerraformStack {
@@ -32,8 +36,8 @@ class BrazeContentProxy extends TerraformStack {
       workspaces: [{ prefix: `${config.name}-` }],
     });
 
-    const region = new datasources.DataAwsRegion(this, 'region');
-    const caller = new datasources.DataAwsCallerIdentity(this, 'caller');
+    const region = new DataAwsRegion(this, 'region');
+    const caller = new DataAwsCallerIdentity(this, 'caller');
 
     const pocketApp = this.createPocketAlbApplication({
       pagerDuty: this.createPagerDuty(),
@@ -51,7 +55,7 @@ class BrazeContentProxy extends TerraformStack {
    * @private
    */
   private getCodeDeploySnsTopic() {
-    return new sns.DataAwsSnsTopic(this, 'backend_notifications', {
+    return new DataAwsSnsTopic(this, 'backend_notifications', {
       name: `Backend-${config.environment}-ChatBot`,
     });
   }
@@ -61,7 +65,7 @@ class BrazeContentProxy extends TerraformStack {
    * @private
    */
   private getSecretsManagerKmsAlias() {
-    return new kms.DataAwsKmsAlias(this, 'kms_alias', {
+    return new DataAwsKmsAlias(this, 'kms_alias', {
       name: 'alias/aws/secretsmanager',
     });
   }
@@ -118,10 +122,10 @@ class BrazeContentProxy extends TerraformStack {
 
   private createPocketAlbApplication(dependencies: {
     pagerDuty: PocketPagerDuty;
-    region: datasources.DataAwsRegion;
-    caller: datasources.DataAwsCallerIdentity;
-    secretsManagerKmsAlias: kms.DataAwsKmsAlias;
-    snsTopic: sns.DataAwsSnsTopic;
+    region: DataAwsRegion;
+    caller: DataAwsCallerIdentity;
+    secretsManagerKmsAlias: DataAwsKmsAlias;
+    snsTopic: DataAwsSnsTopic;
   }): PocketALBApplication {
     const {
       //  pagerDuty, // enable if necessary
