@@ -15,6 +15,10 @@ export const graphCollectionFixture = {
       stories: [
         {
           externalId: '0bc6487f-adad-4971-934b-85bae9852fbd',
+          item: {
+            shortUrl: 'https://pocket.co/x_JA',
+            __typename: 'Item',
+          },
           title: 'Labor Exploitation, Explained by Minions',
           url: 'https://www.vox.com/the-goods/23177505/minions-2-rise-of-gru-explained-capitalism',
           excerpt:
@@ -35,6 +39,10 @@ export const graphCollectionFixture = {
           externalId: '994b8b75-6730-4758-b926-e05d5eea9867',
           title: 'The Rise and Fall of the Pop Star Purity Ring',
           url: 'https://jezebel.com/the-rise-and-fall-of-the-pop-star-purity-ring-1822170318',
+          item: {
+            shortUrl: 'https://pocket.co/x_AB',
+            __typename: 'Item',
+          },
           excerpt: 'this is a text with lot of words. and interesting story',
           imageUrl:
             'https://s3.amazonaws.com/pocket-collectionapi-prod-images/609a0ffd-d9af-4cda-b911-9e40397611bc.jpeg',
@@ -57,12 +65,16 @@ export const brazeCollectionsFixture: BrazeCollections = Object.freeze({
   ),
   stories: graphCollectionFixture.data.getCollectionBySlug.stories.map(
     (story) => {
-      return {
+      const res = {
         ...story,
         //this method is unit tested, so using it in fixture
         imageUrl: getResizedImageUrl(story.imageUrl),
+        shortUrl: story.item.shortUrl,
         authors: story.authors.map((author) => author.name),
       };
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { item: _, ...rest } = res;
+      return rest;
     }
   ),
 });

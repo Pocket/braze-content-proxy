@@ -44,6 +44,9 @@ export async function getCollectionsFromGraph(slug: string): Promise<any> {
             authors {
               name
             }
+            item {
+              shortUrl
+            }
             url
           }
         }

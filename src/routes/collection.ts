@@ -44,11 +44,15 @@ export async function getCollection(slug: string) {
 function transformToBrazePayload(response): BrazeCollections {
   const collection = response.data.getCollectionBySlug;
   const stories = collection.stories.map((story) => {
-    return {
+    const res = {
       ...story,
       imageUrl: getResizedImageUrl(story.imageUrl),
       authors: story.authors.map((author) => author.name),
+      shortUrl: story.item.shortUrl,
     };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { item: _, ...rest } = res;
+    return rest;
   });
   return {
     ...collection,
