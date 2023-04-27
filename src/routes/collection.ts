@@ -59,5 +59,6 @@ function transformToBrazePayload(response): BrazeCollections {
     imageUrl: getResizedImageUrl(collection.imageUrl),
     stories: stories,
   };
+  console.log('blah');
 }
 export default router;
