@@ -50,6 +50,7 @@ export type BrazeCollections = {
 type BrazeCollectionStory = {
   title: string;
   url: string;
+  shortUrl: string;
   excerpt: string;
   imageUrl: string;
   publisher: string;
