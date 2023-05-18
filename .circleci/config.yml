@@ -3,6 +3,7 @@ version: 2.1
 orbs:
   aws-ecs: circleci/aws-ecs@3.2.0
   pocket: pocket/circleci-orbs@2.1.1
+  slack: circleci/slack@4.1
 
 # Workflow shortcuts
 # You can remove unnecessary shortcuts as applicable
@@ -43,6 +44,14 @@ only_dev: &only_dev
     branches:
       only:
         - dev
+
+# Used to notify if a build step has failed
+slack-fail-post-step: &slack-fail-post-step
+  post-steps:
+    - slack/notify:
+        branch_pattern: main
+        event: fail
+        template: basic_fail_1
 
 jobs:
   build:
@@ -140,6 +149,7 @@ workflows:
 
       - build:
           context: pocket
+          <<: *slack-fail-post-step
 
       # # Try building the ECS docker image on each branch
       - pocket/docker_build:
@@ -189,6 +199,7 @@ workflows:
       # # Build & Deploy the Prod Docker Image
       - pocket/docker_build:
           <<: *only_main
+          <<: *slack-fail-post-step
           context: pocket
           name: build_docker_prod
           aws-access-key-id: Prod_AWS_ACCESS_KEY
@@ -205,6 +216,7 @@ workflows:
       # # Prod
       - pocket/execute_codepipeline:
           <<: *only_main
+          <<: *slack-fail-post-step
           context: pocket
           name: deploy_prod
           environment: Prod
@@ -220,6 +232,7 @@ workflows:
       # # Prod
       - pocket/setup_deploy_params:
           <<: *only_main
+          <<: *slack-fail-post-step
           name: setup-deploy-params-prod
           aws_access_key_id: Prod_AWS_ACCESS_KEY
           aws_secret_access_key: Prod_AWS_SECRET_ACCESS_KEY

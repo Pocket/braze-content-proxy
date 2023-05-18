@@ -33,3 +33,6 @@ tmp
 
 # Build files
 dist
+
+# ENV files
+.env
