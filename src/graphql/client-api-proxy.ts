@@ -38,7 +38,7 @@ export async function getCollectionsFromGraph(slug: string): Promise<any> {
           stories {
             externalId
             title
-            externalId
+            excerpt
             imageUrl
             publisher
             authors {
