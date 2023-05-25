@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@apollo/client": "3.7.14",
-    "@sentry/node": "7.50.0",
-    "@sentry/tracing": "7.50.0",
+    "@sentry/node": "7.53.1",
+    "@sentry/tracing": "7.53.1",
     "aws-xray-sdk-express": "3.5.0",
     "cross-fetch": "3.1.6",
     "dataloader": "2.2.2",
