@@ -56,7 +56,7 @@ slack-fail-post-step: &slack-fail-post-step
 jobs:
   build:
     docker:
-      - image: cimg/node:18.16.0@sha256:d0a4c62ebf5361f909ef629147c81df7e702188f041b77db81b8743317023bd0
+      - image: cimg/node:18.16.1@sha256:ffc2e6089568307e961a09485b073c440019cf920f23648ae2b8f7be1d1b0129
     steps:
       - checkout
       # Define the working directory for this job
@@ -90,7 +90,7 @@ jobs:
     # Example for running integration tests using a docker container
     description: Run integration tests to validate status and return type from endpoint
     docker:
-      - image: cimg/node:18.16.0@sha256:d0a4c62ebf5361f909ef629147c81df7e702188f041b77db81b8743317023bd0
+      - image: cimg/node:18.16.1@sha256:ffc2e6089568307e961a09485b073c440019cf920f23648ae2b8f7be1d1b0129
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
@@ -114,7 +114,7 @@ jobs:
   test_specs:
     description: Run spec tests
     docker:
-      - image: cimg/node:18.16.0@sha256:d0a4c62ebf5361f909ef629147c81df7e702188f041b77db81b8743317023bd0
+      - image: cimg/node:18.16.1@sha256:ffc2e6089568307e961a09485b073c440019cf920f23648ae2b8f7be1d1b0129
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
