@@ -19,7 +19,7 @@
     "url": "git+https://github.com/Pocket/braze-content-proxy.git"
   },
   "dependencies": {
-    "@apollo/client": "3.7.15",
+    "@apollo/client": "3.7.16",
     "@sentry/node": "7.53.1",
     "@sentry/tracing": "7.53.1",
     "aws-xray-sdk-express": "3.5.0",
