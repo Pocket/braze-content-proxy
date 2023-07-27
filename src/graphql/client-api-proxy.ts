@@ -59,7 +59,7 @@ export async function getCollectionsFromGraph(slug: string): Promise<any> {
 
   if (!response.data?.getCollectionBySlug) {
     throw new Error(
-      `server error: unable to fetch collections for slug: ${slug}.`
+      `server error: unable to fetch collections for slug: ${slug}.`,
     );
   }
 
@@ -75,7 +75,7 @@ export async function getCollectionsFromGraph(slug: string): Promise<any> {
  */
 export async function getScheduledSurfaceStories(
   date: string,
-  scheduledSurfaceId: string
+  scheduledSurfaceId: string,
 ): Promise<ClientApiResponse | null> {
   const data = await client.query({
     query: gql`
@@ -107,7 +107,7 @@ export async function getScheduledSurfaceStories(
 
   if (!data.data?.scheduledSurface?.items) {
     throw new Error(
-      `No data returned for ${scheduledSurfaceId} scheduled on ${date}.`
+      `No data returned for ${scheduledSurfaceId} scheduled on ${date}.`,
     );
   }
   return data;

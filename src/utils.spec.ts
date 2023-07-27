@@ -37,7 +37,7 @@ describe('function validateDate', () => {
     expect(() => {
       validateDate('');
     }).toThrowError(
-      'Not a valid date. Please provide a date in YYYY-MM-DD format.'
+      'Not a valid date. Please provide a date in YYYY-MM-DD format.',
     );
   });
 
@@ -45,7 +45,7 @@ describe('function validateDate', () => {
     expect(() => {
       validateDate('29 Jan, 1900');
     }).toThrowError(
-      'Not a valid date. Please provide a date in YYYY-MM-DD format.'
+      'Not a valid date. Please provide a date in YYYY-MM-DD format.',
     );
   });
 });
@@ -57,13 +57,13 @@ describe('function validateApiKey', () => {
 
   it('should throw an error when an empty string is provided', async () => {
     await expect(validateApiKey('')).rejects.toThrowError(
-      config.app.INVALID_API_KEY_ERROR_MESSAGE
+      config.app.INVALID_API_KEY_ERROR_MESSAGE,
     );
   });
 
   it('should throw an error when provided key does not match braze api key', async () => {
     await expect(validateApiKey('incorrect-api-key')).rejects.toThrowError(
-      config.app.INVALID_API_KEY_ERROR_MESSAGE
+      config.app.INVALID_API_KEY_ERROR_MESSAGE,
     );
   });
 });
@@ -73,7 +73,7 @@ describe('function getResizedImageUrl', () => {
     const imageUrl = 'www.my-image-url.com';
     const resizedImageUrl =
       `${config.images.protocol}://${config.images.host}/${config.images.width}x${config.images.height}/filters:${config.images.filters}/`.concat(
-        encodeURIComponent(imageUrl)
+        encodeURIComponent(imageUrl),
       );
 
     expect(getResizedImageUrl(imageUrl)).toEqual(resizedImageUrl);
@@ -88,7 +88,7 @@ describe('function getResizedImageUrl', () => {
     };
     const resizedImageUrl =
       `${config.images.protocol}://${config.images.host}/${customFilters.width}x${customFilters.height}/filters:${customFilters.filters}/`.concat(
-        encodeURIComponent(imageUrl)
+        encodeURIComponent(imageUrl),
       );
 
     expect(
@@ -96,8 +96,8 @@ describe('function getResizedImageUrl', () => {
         imageUrl,
         customFilters.width,
         customFilters.height,
-        customFilters.filters
-      )
+        customFilters.filters,
+      ),
     ).toEqual(resizedImageUrl);
   });
 });

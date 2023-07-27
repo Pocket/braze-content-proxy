@@ -49,18 +49,18 @@ router.get('/:scheduledSurfaceID', async (req, res, next) => {
 export const stories = {
   getStories: async (
     date: string,
-    scheduledSurfaceId: string
+    scheduledSurfaceId: string,
   ): Promise<BrazeContentProxyResponse> => {
     const data: ClientApiResponse | null = await getScheduledSurfaceStories(
       date,
-      scheduledSurfaceId
+      scheduledSurfaceId,
     );
 
     const stories = data ? data.data.scheduledSurface.items : [];
 
     const transformedStories: TransformedCorpusItem[] = stories.map(function (
       item,
-      index
+      index,
     ) {
       return {
         // The id of the Scheduled Surface Item
@@ -74,8 +74,7 @@ export const stories = {
           ?.map((author) => author.name)
           .join(', '),
       };
-    },
-    stories);
+    }, stories);
 
     return {
       stories: transformedStories,

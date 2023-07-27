@@ -26,7 +26,7 @@ export function validateDate(date: string): void {
 
   if (!date || date.match(regEx) === null) {
     throw new Error(
-      'Not a valid date. Please provide a date in YYYY-MM-DD format.'
+      'Not a valid date. Please provide a date in YYYY-MM-DD format.',
     );
   }
 
@@ -70,9 +70,9 @@ export function getResizedImageUrl(
   imageUrl: string,
   width: number = config.images.width,
   height: number = config.images.height,
-  filters: string = config.images.filters
+  filters: string = config.images.filters,
 ): string {
   return `${config.images.protocol}://${config.images.host}/${width}x${height}/filters:${filters}/`.concat(
-    encodeURIComponent(imageUrl)
+    encodeURIComponent(imageUrl),
   );
 }

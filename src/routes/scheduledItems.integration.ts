@@ -65,7 +65,7 @@ describe('/scheduled-items/:scheduledSurfaceID?date=date&apikey=apikey', () => {
 
   it('should return 500 if incorrect scheduled surface is provided ', async () => {
     const response = await requestAgent.get(
-      `/scheduled-items/NEW_TAB_DOES_NOT_EXIST`
+      `/scheduled-items/NEW_TAB_DOES_NOT_EXIST`,
     );
 
     expect(response.statusCode).equals(500);
@@ -75,25 +75,25 @@ describe('/scheduled-items/:scheduledSurfaceID?date=date&apikey=apikey', () => {
 
   it('should return 500 if incorrect date format is provided ', async () => {
     const response = await requestAgent.get(
-      `/scheduled-items/${testNewTab}?date=20220524`
+      `/scheduled-items/${testNewTab}?date=20220524`,
     );
 
     expect(response.statusCode).equals(500);
     expect(response.body.error).to.not.be.undefined;
     expect(response.body.error).to.equal(
-      'Not a valid date. Please provide a date in YYYY-MM-DD format.'
+      'Not a valid date. Please provide a date in YYYY-MM-DD format.',
     );
   });
 
   it('should return 500 if invalid api key is provided ', async () => {
     const response = await requestAgent.get(
-      `/scheduled-items/${testNewTab}?date=${testDate}&apikey=invalid-key`
+      `/scheduled-items/${testNewTab}?date=${testDate}&apikey=invalid-key`,
     );
 
     expect(response.statusCode).equals(500);
     expect(response.body.error).to.not.be.undefined;
     expect(response.body.error).to.equal(
-      config.app.INVALID_API_KEY_ERROR_MESSAGE
+      config.app.INVALID_API_KEY_ERROR_MESSAGE,
     );
   });
 });

@@ -85,7 +85,7 @@ app.use((err, req, res, next) => {
 app
   .listen({ port: config.app.port }, () => {
     console.log(
-      `🚀 Braze Content Proxy ready at http://localhost:${config.app.port}`
+      `🚀 Braze Content Proxy ready at http://localhost:${config.app.port}`,
     );
   })
   .on('error', (_error) => {
