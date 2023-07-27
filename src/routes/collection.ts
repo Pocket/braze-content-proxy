@@ -34,7 +34,7 @@ router.get('/:slug', async (req, res, next) => {
 
 /**
  * fetch collections and transform them to braze payload
- * @param response
+ * @param slug
  */
 export async function getCollection(slug: string) {
   const response = await getCollectionsFromGraph(slug);

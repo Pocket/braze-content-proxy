@@ -61,7 +61,7 @@ export const graphCollectionFixture = {
 export const brazeCollectionsFixture: BrazeCollections = Object.freeze({
   ...graphCollectionFixture.data.getCollectionBySlug,
   imageUrl: getResizedImageUrl(
-    graphCollectionFixture.data.getCollectionBySlug.imageUrl
+    graphCollectionFixture.data.getCollectionBySlug.imageUrl,
   ),
   stories: graphCollectionFixture.data.getCollectionBySlug.stories.map(
     (story) => {
@@ -75,6 +75,6 @@ export const brazeCollectionsFixture: BrazeCollections = Object.freeze({
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { item: _, ...rest } = res;
       return rest;
-    }
+    },
   ),
 });

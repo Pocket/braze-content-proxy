@@ -17,7 +17,7 @@ describe(`get collection test`, () => {
       .spyOn(client, 'query')
       .mockResolvedValue(graphCollectionFixture as any);
     const response = await request(app).get(
-      `/collection/${testSlug}?apikey=${config.aws.brazeApiKey}`
+      `/collection/${testSlug}?apikey=${config.aws.brazeApiKey}`,
     );
     expect(response.statusCode).equals(200);
     expect(response.body).to.deep.equal(brazeCollectionsFixture);
@@ -43,19 +43,19 @@ describe(`get collection test`, () => {
     };
     jest.spyOn(client, 'query').mockResolvedValue(notFoundGraphError as any);
     const response = await request(app).get(
-      `/collection/not-found-slug?apikey=${config.aws.brazeApiKey}`
+      `/collection/not-found-slug?apikey=${config.aws.brazeApiKey}`,
     );
     expect(response.statusCode).equals(500);
   });
 
   it('should return 500 if invalid api key is provided ', async () => {
     const response = await request(app).get(
-      `/collection/this-is-test-slug?apikey=invalid-api-key`
+      `/collection/this-is-test-slug?apikey=invalid-api-key`,
     );
     expect(response.statusCode).equals(500);
     expect(response.body.error).to.not.be.undefined;
     expect(response.body.error).to.equal(
-      config.app.INVALID_API_KEY_ERROR_MESSAGE
+      config.app.INVALID_API_KEY_ERROR_MESSAGE,
     );
   });
 });
