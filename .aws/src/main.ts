@@ -110,8 +110,9 @@ class BrazeContentProxy extends TerraformStack {
     return new PocketPagerDuty(this, 'pagerduty', {
       prefix: config.prefix,
       service: {
+        // This is a Tier 2 service and as such only raises non-critical alarms.
         criticalEscalationPolicyId: incidentManagement
-          .get('policy_default_critical_id')
+          .get('policy_default_non_critical_id')
           .toString(),
         nonCriticalEscalationPolicyId: incidentManagement
           .get('policy_default_non_critical_id')
@@ -127,13 +128,8 @@ class BrazeContentProxy extends TerraformStack {
     secretsManagerKmsAlias: DataAwsKmsAlias;
     snsTopic: DataAwsSnsTopic;
   }): PocketALBApplication {
-    const {
-      //  pagerDuty, // enable if necessary
-      region,
-      caller,
-      secretsManagerKmsAlias,
-      snsTopic,
-    } = dependencies;
+    const { pagerDuty, region, caller, secretsManagerKmsAlias, snsTopic } =
+      dependencies;
 
     return new PocketALBApplication(this, 'application', {
       internal: false,
@@ -249,12 +245,11 @@ class BrazeContentProxy extends TerraformStack {
         targetMaxCapacity: 10,
       },
       alarms: {
-        //TODO: When you start using the service add the pagerduty arns as an action `pagerDuty.snsNonCriticalAlarmTopic.arn`
         http5xxErrorPercentage: {
           threshold: 25,
           evaluationPeriods: 4,
           period: 300,
-          actions: config.isDev ? [] : [],
+          actions: config.isDev ? [] : [pagerDuty.snsNonCriticalAlarmTopic.arn],
         },
       },
     });
