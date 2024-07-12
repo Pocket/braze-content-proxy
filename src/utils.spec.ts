@@ -1,30 +1,5 @@
 import config from './config';
-import {
-  validateDate,
-  validateScheduledSurfaceGuid,
-  validateApiKey,
-  getResizedImageUrl,
-} from './utils';
-
-describe('function validateScheduledSurfaceGuid', () => {
-  it('Allows a valid Pocket Hits surface', () => {
-    expect(() => {
-      validateScheduledSurfaceGuid('POCKET_HITS_EN_US');
-    }).not.toThrow();
-  });
-
-  it('Disallows an empty string', () => {
-    expect(() => {
-      validateScheduledSurfaceGuid('');
-    }).toThrowError('Not a valid Scheduled Surface');
-  });
-
-  it('Disallows an invalid surface GUID', () => {
-    expect(() => {
-      validateScheduledSurfaceGuid('MADE_UP_GUID_GOES_HERE');
-    }).toThrowError('Not a valid Scheduled Surface.');
-  });
-});
+import { validateDate, validateApiKey, getResizedImageUrl } from './utils';
 
 describe('function validateDate', () => {
   it('Allows a date in YYYY-MM-DD format', () => {

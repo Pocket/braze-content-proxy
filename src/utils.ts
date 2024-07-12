@@ -6,16 +6,6 @@
  */
 import config from './config';
 
-export function validateScheduledSurfaceGuid(name: string): void {
-  const allowlist = ['POCKET_HITS_EN_US', 'POCKET_HITS_DE_DE'];
-
-  if (allowlist.includes(name)) {
-    return;
-  } else {
-    throw new Error('Not a valid Scheduled Surface.');
-  }
-}
-
 /**
  * Check if the date string provided is in YYYY-MM-DD format.
  *
