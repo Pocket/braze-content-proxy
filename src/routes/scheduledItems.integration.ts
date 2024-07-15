@@ -63,16 +63,6 @@ describe('/scheduled-items/:scheduledSurfaceID?date=date&apikey=apikey', () => {
     expect(response.statusCode).equals(404);
   });
 
-  it('should return 500 if incorrect scheduled surface is provided ', async () => {
-    const response = await requestAgent.get(
-      `/scheduled-items/NEW_TAB_DOES_NOT_EXIST`,
-    );
-
-    expect(response.statusCode).equals(500);
-    expect(response.body.error).to.not.be.undefined;
-    expect(response.body.error).to.equal('Not a valid Scheduled Surface.');
-  });
-
   it('should return 500 if incorrect date format is provided ', async () => {
     const response = await requestAgent.get(
       `/scheduled-items/${testNewTab}?date=20220524`,

@@ -1,11 +1,6 @@
 import { BrazeContentProxyResponse, TransformedCorpusItem } from './types';
 import { ClientApiResponse } from '../graphql/types';
-import {
-  getResizedImageUrl,
-  validateApiKey,
-  validateDate,
-  validateScheduledSurfaceGuid,
-} from '../utils';
+import { getResizedImageUrl, validateApiKey, validateDate } from '../utils';
 import { getScheduledSurfaceStories } from '../graphql/client-api-proxy';
 import config from '../config';
 import { Router } from 'express';
@@ -29,7 +24,6 @@ router.get('/:scheduledSurfaceID', async (req, res, next) => {
 
   try {
     // Validate inputs
-    validateScheduledSurfaceGuid(scheduledSurfaceID);
     validateDate(date);
     await validateApiKey(apiKey);
 
