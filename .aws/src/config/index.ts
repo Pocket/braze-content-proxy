@@ -36,5 +36,8 @@ export const config = {
   tags: {
     service: name,
     environment,
+    app_code: 'pocket',
+    component_code: 'pocket-pocket-hits',
+    env_code: isDev ? 'dev' : 'prod',
   },
 };
