@@ -136,7 +136,6 @@ class BrazeContentProxy extends TerraformStack {
       internal: false,
       prefix: config.prefix,
       alb6CharacterPrefix: config.shortName,
-      tags: config.tags,
       cdn: true,
       domain: config.domain,
       containerConfigs: [
