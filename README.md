@@ -1,3 +1,6 @@
+> [!IMPORTANT]  
+> This repo has been moved to [Pocket's Monorepo](https://github.com/Pocket/pocket-monorepo)
+
 # Braze Content Proxy API
 
 Provides Pocket Hits stories to be consumed by Connected Content blocks in Braze.
